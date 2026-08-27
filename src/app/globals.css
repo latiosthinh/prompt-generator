@@ -67,6 +67,42 @@ body {
   scrollbar-color: var(--border-color) transparent;
 }
 
+/* UIW Markdown Editor dark styling tweaks */
+.w-md-editor {
+  background-color: transparent !important;
+  color: #EDE5DC !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: #191614 !important;
+  border-bottom: 1px solid #38312C !important;
+}
+
+.w-md-editor-toolbar li > button {
+  color: #B5A89B !important;
+}
+
+.w-md-editor-toolbar li > button:hover {
+  color: #FFFFFF !important;
+  background-color: #282320 !important;
+}
+
+.w-md-editor-text-pre,
+.w-md-editor-text-input,
+.w-md-editor-text {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  font-family: var(--font-geist-mono), monospace !important;
+}
+
+.w-md-editor-preview {
+  background-color: #151210 !important;
+  padding: 1rem !important;
+  box-shadow: inset 1px 0 0 0 #38312C !important;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

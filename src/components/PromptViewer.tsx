@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -17,6 +18,8 @@ import {
   FileCode2,
 } from 'lucide-react';
 import { Translations } from '@/i18n';
+
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
 interface PromptViewerProps {
   promptText: string;
@@ -185,7 +188,7 @@ export function PromptViewer({
         </div>
       </div>
 
-      {/* Stats Bar & 3-Mode View Controls: Markdown / Text / Direct Edit */}
+      {/* Stats Bar & 3-Mode View Controls: Formatted Preview / Raw Markdown / Markdown Editor */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#8E8377] dark:text-[#7E7368] px-1">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
@@ -203,18 +206,7 @@ export function PromptViewer({
 
         <div className="flex items-center gap-1 self-end sm:self-center">
           <div className="inline-flex rounded-md border border-[#E6DFD3] bg-[#FFFFFF] p-0.5 dark:border-[#38312C] dark:bg-[#282320]">
-            <button
-              type="button"
-              onClick={() => setActiveTab('markdown')}
-              className={`inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-[11px] font-medium transition cursor-pointer ${
-                activeTab === 'markdown'
-                  ? 'bg-[#F5F0E6] text-[#2B2520] font-semibold shadow-2xs dark:bg-[#1F1A18] dark:text-white'
-                  : 'text-[#8E8377] hover:text-[#2B2520] dark:hover:text-white'
-              }`}
-            >
-              <Eye className="h-3 w-3" />
-              <span>{t.promptViewer.tabFormatted}</span>
-            </button>
+            {/* Tab 1: Formatted View (ReactMarkdown viewer) */}
             <button
               type="button"
               onClick={() => setActiveTab('text')}
@@ -224,9 +216,25 @@ export function PromptViewer({
                   : 'text-[#8E8377] hover:text-[#2B2520] dark:hover:text-white'
               }`}
             >
-              <FileCode2 className="h-3 w-3" />
+              <Eye className="h-3 w-3" />
               <span>{t.promptViewer.tabRaw}</span>
             </button>
+
+            {/* Tab 2: Raw Markdown Source */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('markdown')}
+              className={`inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-[11px] font-medium transition cursor-pointer ${
+                activeTab === 'markdown'
+                  ? 'bg-[#F5F0E6] text-[#2B2520] font-semibold shadow-2xs dark:bg-[#1F1A18] dark:text-white'
+                  : 'text-[#8E8377] hover:text-[#2B2520] dark:hover:text-white'
+              }`}
+            >
+              <FileCode2 className="h-3 w-3" />
+              <span>{t.promptViewer.tabFormatted}</span>
+            </button>
+
+            {/* Tab 3: Interactive Markdown Editor */}
             <button
               type="button"
               onClick={() => setActiveTab('edit')}
@@ -247,7 +255,8 @@ export function PromptViewer({
       <div className="relative rounded-md border border-[#E6DFD3] bg-[#221D1A] shadow-2xs dark:border-[#38312C] dark:bg-[#151210] overflow-hidden flex flex-col min-h-[380px] max-h-[65vh]">
         {promptText || activeTab === 'edit' ? (
           <div className="flex-1 overflow-y-auto p-4.5">
-            {activeTab === 'markdown' && (
+            {/* View-Text: Rendered formatted Markdown Viewer */}
+            {activeTab === 'text' && (
               <div className="text-[#EDE5DC] text-xs sm:text-sm leading-relaxed select-text space-y-3 font-sans">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
@@ -304,7 +313,8 @@ export function PromptViewer({
               </div>
             )}
 
-            {activeTab === 'text' && (
+            {/* View-Markdown: Raw Markdown Source Text */}
+            {activeTab === 'markdown' && (
               <div className="rounded-md bg-[#191614] p-3 border border-[#38312C]">
                 <pre className="font-mono text-xs text-[#EDE5DC] leading-relaxed overflow-x-auto whitespace-pre-wrap select-text">
                   {promptText}
@@ -315,15 +325,18 @@ export function PromptViewer({
               </div>
             )}
 
+            {/* Markdown Editor */}
             {activeTab === 'edit' && (
-              <div className="h-full flex flex-col">
-                <textarea
+              <div className="h-full flex flex-col" data-color-mode="dark">
+                <MDEditor
                   value={promptText}
-                  onChange={(e) => onChangePrompt?.(e.target.value)}
-                  placeholder={t.promptViewer.editorPlaceholder}
-                  disabled={isStreaming}
-                  className="w-full flex-1 min-h-[320px] bg-transparent text-xs sm:text-sm font-mono text-[#EDE5DC] leading-relaxed resize-none outline-hidden placeholder:text-[#7E7368]"
-                  spellCheck={false}
+                  onChange={(val) => onChangePrompt?.(val || '')}
+                  preview="live"
+                  height={380}
+                  textareaProps={{
+                    placeholder: t.promptViewer.editorPlaceholder,
+                    disabled: isStreaming,
+                  }}
                 />
               </div>
             )}

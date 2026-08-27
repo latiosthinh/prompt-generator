@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Copy,
   Check,
@@ -246,8 +248,56 @@ export function PromptViewer({
         {promptText || activeTab === 'edit' ? (
           <div className="flex-1 overflow-y-auto p-4.5">
             {activeTab === 'markdown' && (
-              <div className="prose prose-invert max-w-none text-[#EDE5DC] text-xs sm:text-sm leading-relaxed whitespace-pre-wrap font-sans select-text">
-                {promptText}
+              <div className="text-[#EDE5DC] text-xs sm:text-sm leading-relaxed select-text space-y-3 font-sans">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ ...props }) => (
+                      <h1 className="text-base sm:text-lg font-bold text-[#FFFFFF] mt-4 mb-2 pb-1 border-b border-[#38312C] flex items-center gap-2" {...props} />
+                    ),
+                    h2: ({ ...props }) => (
+                      <h2 className="text-sm sm:text-base font-semibold text-[#FDF4ED] mt-3.5 mb-1.5 flex items-center gap-1.5" {...props} />
+                    ),
+                    h3: ({ ...props }) => (
+                      <h3 className="text-xs sm:text-sm font-semibold text-[#E6DFD3] mt-2.5 mb-1" {...props} />
+                    ),
+                    p: ({ ...props }) => (
+                      <p className="text-xs sm:text-sm text-[#EDE5DC] leading-relaxed my-1.5" {...props} />
+                    ),
+                    ul: ({ ...props }) => (
+                      <ul className="list-disc pl-4 space-y-1 text-xs sm:text-sm text-[#EDE5DC] my-2" {...props} />
+                    ),
+                    ol: ({ ...props }) => (
+                      <ol className="list-decimal pl-4 space-y-1 text-xs sm:text-sm text-[#EDE5DC] my-2" {...props} />
+                    ),
+                    li: ({ ...props }) => <li className="leading-relaxed" {...props} />,
+                    strong: ({ ...props }) => (
+                      <strong className="font-semibold text-white" {...props} />
+                    ),
+                    code: ({ inline, ...props }: { inline?: boolean } & React.HTMLAttributes<HTMLElement>) =>
+                      inline ? (
+                        <code className="rounded-sm bg-[#151210] px-1.5 py-0.5 font-mono text-[11px] text-[#DA7756] border border-[#38312C]" {...props} />
+                      ) : (
+                        <code className="block rounded-md bg-[#151210] p-3 font-mono text-xs text-[#EDE5DC] border border-[#38312C] overflow-x-auto my-2" {...props} />
+                      ),
+                    blockquote: ({ ...props }) => (
+                      <blockquote className="border-l-2 border-[#C15F3D] pl-3 py-0.5 text-[#B5A89B] italic my-2" {...props} />
+                    ),
+                    table: ({ ...props }) => (
+                      <div className="overflow-x-auto my-3 border border-[#38312C] rounded-md">
+                        <table className="w-full text-xs text-left border-collapse" {...props} />
+                      </div>
+                    ),
+                    th: ({ ...props }) => (
+                      <th className="bg-[#191614] border-b border-[#38312C] p-2 font-semibold text-[#EDE5DC]" {...props} />
+                    ),
+                    td: ({ ...props }) => (
+                      <td className="border-b border-[#38312C]/60 p-2 text-[#EDE5DC]" {...props} />
+                    ),
+                  }}
+                >
+                  {promptText}
+                </ReactMarkdown>
                 {isStreaming && (
                   <span className="inline-block w-1.5 h-3.5 ml-1 bg-[#C15F3D] animate-pulse align-middle" />
                 )}
@@ -255,12 +305,14 @@ export function PromptViewer({
             )}
 
             {activeTab === 'text' && (
-              <pre className="font-mono text-xs text-[#EDE5DC] leading-relaxed overflow-x-auto whitespace-pre-wrap select-text">
-                {promptText}
-                {isStreaming && (
-                  <span className="inline-block w-1.5 h-3.5 ml-1 bg-[#C15F3D] animate-pulse align-middle" />
-                )}
-              </pre>
+              <div className="rounded-md bg-[#191614] p-3 border border-[#38312C]">
+                <pre className="font-mono text-xs text-[#EDE5DC] leading-relaxed overflow-x-auto whitespace-pre-wrap select-text">
+                  {promptText}
+                  {isStreaming && (
+                    <span className="inline-block w-1.5 h-3.5 ml-1 bg-[#C15F3D] animate-pulse align-middle" />
+                  )}
+                </pre>
+              </div>
             )}
 
             {activeTab === 'edit' && (

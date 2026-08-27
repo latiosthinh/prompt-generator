@@ -272,7 +272,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBF9F5] text-[#2B2520] selection:bg-[#C15F3D]/20 selection:text-[#2B2520] dark:bg-[#191614] dark:text-[#EDE5DC] font-sans flex">
+    <div className="min-h-screen bg-[#FBF9F5] text-[#2B2520] dark:bg-[#191614] dark:text-[#EDE5DC] font-sans flex">
       {/* Sidebar Component */}
       <Sidebar
         sessions={sessions}

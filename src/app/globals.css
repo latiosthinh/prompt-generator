@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #FBF9F5;
+  --bg-secondary: #F3EFE6;
+  --bg-card: #FFFFFF;
+  --bg-sidebar: #F5F0E6;
+  --text-primary: #2B2520;
+  --text-secondary: #6B6258;
+  --text-muted: #8E8377;
+  --border-color: #E6DFD3;
+  --border-subtle: #EDE7DC;
+  --accent-terra: #D97706; /* warm terracotta/amber */
+  --accent-claude: #C15F3D; /* Claude terracotta warm */
+  --accent-claude-hover: #A94E30;
+  --accent-claude-soft: #F9EFE9;
+}
+
+@theme inline {
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #191614;
+    --bg-secondary: #221D1A;
+    --bg-card: #282320;
+    --bg-sidebar: #1F1A18;
+    --text-primary: #EDE5DC;
+    --text-secondary: #B5A89B;
+    --text-muted: #7E7368;
+    --border-color: #38312C;
+    --border-subtle: #2E2723;
+    --accent-terra: #D97706;
+    --accent-claude: #DA7756;
+    --accent-claude-hover: #E38A6C;
+    --accent-claude-soft: #33231D;
+  }
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" fill="none">
+  <rect width="36" height="36" rx="9" fill="#C15F3D"/>
+  <path d="M18 7.5L20.8 15.2L28.5 18L20.8 20.8L18 28.5L15.2 20.8L7.5 18L15.2 15.2L18 7.5Z" fill="#FFFFFF"/>
+  <circle cx="26" cy="10" r="2" fill="#FDF4ED"/>
+  <circle cx="10" cy="26" r="1.5" fill="#FDF4ED"/>
+  <text x="46" y="24" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="16" letter-spacing="-0.02em" fill="#2B2520">Prompt<tspan fill="#C15F3D">Forge</tspan></text>
+</svg>

@@ -377,10 +377,10 @@ export default function Home() {
             </div>
           )}
 
-          {/* 2-Column Dashboard Grid with wide expansion */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 items-start">
-            {/* Left Column: Domain & Seed Input (5 cols on lg) */}
-            <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-18">
+          {/* 2-Column Dashboard Grid with controlled width */}
+          <div className="flex flex-col lg:flex-row gap-5 flex-1 items-start">
+            {/* Left Column: Domain & Seed Input (capped at max 500px) */}
+            <div className="w-full lg:w-[460px] lg:max-w-[500px] shrink-0 space-y-4 lg:sticky lg:top-18">
               {/* Step 1: Domain Selection (Icons only with real tooltip) */}
               <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-4 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
                 <DomainSelector
@@ -406,8 +406,8 @@ export default function Home() {
               </section>
             </div>
 
-            {/* Right Column: Dynamic Interaction / Output (7 cols on lg) */}
-            <div className="lg:col-span-7 flex flex-col min-h-[500px]">
+            {/* Right Column: Dynamic Interaction / Output */}
+            <div className="flex-1 w-full min-w-0 flex flex-col min-h-[500px]">
               {currentStep === 'input' && (
                 <div className="h-full min-h-[420px] flex flex-col items-center justify-center rounded-lg border border-dashed border-[#E6DFD3] bg-[#F5F0E6]/50 p-8 text-center dark:border-[#38312C] dark:bg-[#1F1A18]/50">
                   <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#C15F3D]/10 text-[#C15F3D] dark:bg-[#DA7756]/20 dark:text-[#DA7756] mb-3">

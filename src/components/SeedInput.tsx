@@ -64,8 +64,7 @@ export function SeedInput({
           onKeyDown={handleKeyDown}
           placeholder={selectedDomain.placeholder}
           disabled={disabled || isLoading}
-          rows={4}
-          className="w-full resize-y rounded bg-transparent p-1.5 text-sm text-[#2B2520] placeholder:text-[#8E8377] focus:outline-hidden dark:text-[#EDE5DC] dark:placeholder:text-[#7E7368]"
+          className="w-full min-h-[400px] resize-y rounded bg-transparent p-2 text-sm leading-relaxed text-[#2B2520] placeholder:text-[#8E8377] focus:outline-hidden dark:text-[#EDE5DC] dark:placeholder:text-[#7E7368]"
         />
 
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#E6DFD3]/60 pt-2 px-1 dark:border-[#38312C]/60">

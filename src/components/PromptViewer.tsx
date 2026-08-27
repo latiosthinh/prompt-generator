@@ -316,7 +316,7 @@ export function PromptViewer({
             {/* View-Markdown: Raw Markdown Source Text */}
             {activeTab === 'markdown' && (
               <div className="rounded-md bg-[#191614] p-3 border border-[#38312C]">
-                <pre className="font-mono text-xs text-[#EDE5DC] leading-relaxed whitespace-pre-wrap break-words break-all select-text">
+                <pre className="font-mono text-xs text-[#EDE5DC] leading-relaxed whitespace-pre-wrap break-words break-all select-text overflow-hidden">
                   {promptText}
                   {isStreaming && (
                     <span className="inline-block w-1.5 h-3.5 ml-1 bg-[#C15F3D] animate-pulse align-middle" />

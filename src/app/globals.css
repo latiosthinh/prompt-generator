@@ -61,6 +61,13 @@ body {
   color: #FFFFFF !important;
 }
 
+/* Ensure all pre/code and markdown elements wrap text without horizontal overflow */
+pre, code, textarea {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
 /* Custom minimal scrollbar */
 * {
   scrollbar-width: thin;

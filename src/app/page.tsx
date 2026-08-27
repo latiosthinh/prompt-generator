@@ -450,6 +450,17 @@ export default function Home() {
                     onEditQuestions={handleEditQuestions}
                     onKeepBuilding={handleKeepBuildingContext}
                     onResetAll={handleResetAll}
+                    onChangePrompt={(updated) => {
+                      setGeneratedPrompt(updated);
+                      if (activeSessionId) {
+                        const s = sessionStore.getSession(activeSessionId);
+                        if (s && s.rounds && s.rounds.length > 0) {
+                          s.rounds[s.rounds.length - 1].prompt = updated;
+                          s.updatedAt = Date.now();
+                          sessionStore.saveSession(s);
+                        }
+                      }
+                    }}
                     isRefining={isRefiningQuestions}
                     t={t}
                   />

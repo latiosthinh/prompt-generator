@@ -11,6 +11,8 @@ import {
   Edit3,
   Layers,
   ArrowRight,
+  Eye,
+  FileCode2,
 } from 'lucide-react';
 import { Translations } from '@/i18n';
 
@@ -22,6 +24,7 @@ interface PromptViewerProps {
   onEditQuestions: () => void;
   onKeepBuilding: () => void;
   onResetAll: () => void;
+  onChangePrompt?: (updatedPrompt: string) => void;
   isRefining?: boolean;
   t: Translations;
 }
@@ -34,11 +37,12 @@ export function PromptViewer({
   onEditQuestions,
   onKeepBuilding,
   onResetAll,
+  onChangePrompt,
   isRefining = false,
   t,
 }: PromptViewerProps) {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formatted' | 'raw'>('formatted');
+  const [activeTab, setActiveTab] = useState<'markdown' | 'text' | 'edit'>('markdown');
 
   // Simple word count and token estimation
   const stats = useMemo(() => {
@@ -179,7 +183,7 @@ export function PromptViewer({
         </div>
       </div>
 
-      {/* Stats Bar & Tab Controls */}
+      {/* Stats Bar & 3-Mode View Controls: Markdown / Text / Direct Edit */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#8E8377] dark:text-[#7E7368] px-1">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
@@ -199,52 +203,81 @@ export function PromptViewer({
           <div className="inline-flex rounded-md border border-[#E6DFD3] bg-[#FFFFFF] p-0.5 dark:border-[#38312C] dark:bg-[#282320]">
             <button
               type="button"
-              onClick={() => setActiveTab('formatted')}
-              className={`rounded-sm px-2 py-0.5 text-[11px] font-medium transition cursor-pointer ${
-                activeTab === 'formatted'
-                  ? 'bg-[#F5F0E6] text-[#2B2520] font-semibold dark:bg-[#1F1A18] dark:text-white'
+              onClick={() => setActiveTab('markdown')}
+              className={`inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-[11px] font-medium transition cursor-pointer ${
+                activeTab === 'markdown'
+                  ? 'bg-[#F5F0E6] text-[#2B2520] font-semibold shadow-2xs dark:bg-[#1F1A18] dark:text-white'
                   : 'text-[#8E8377] hover:text-[#2B2520] dark:hover:text-white'
               }`}
             >
-              {t.promptViewer.tabFormatted}
+              <Eye className="h-3 w-3" />
+              <span>{t.promptViewer.tabFormatted}</span>
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('raw')}
-              className={`rounded-sm px-2 py-0.5 text-[11px] font-medium transition cursor-pointer ${
-                activeTab === 'raw'
-                  ? 'bg-[#F5F0E6] text-[#2B2520] font-semibold dark:bg-[#1F1A18] dark:text-white'
+              onClick={() => setActiveTab('text')}
+              className={`inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-[11px] font-medium transition cursor-pointer ${
+                activeTab === 'text'
+                  ? 'bg-[#F5F0E6] text-[#2B2520] font-semibold shadow-2xs dark:bg-[#1F1A18] dark:text-white'
                   : 'text-[#8E8377] hover:text-[#2B2520] dark:hover:text-white'
               }`}
             >
-              {t.promptViewer.tabRaw}
+              <FileCode2 className="h-3 w-3" />
+              <span>{t.promptViewer.tabRaw}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('edit')}
+              className={`inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-[11px] font-medium transition cursor-pointer ${
+                activeTab === 'edit'
+                  ? 'bg-[#C15F3D] text-white font-semibold shadow-2xs dark:bg-[#DA7756]'
+                  : 'text-[#8E8377] hover:text-[#2B2520] dark:hover:text-white'
+              }`}
+            >
+              <Edit3 className="h-3 w-3" />
+              <span>{t.promptViewer.tabEdit}</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Prompt Content Box */}
-      <div className="relative rounded-md border border-[#E6DFD3] bg-[#221D1A] p-4.5 shadow-2xs dark:border-[#38312C] dark:bg-[#151210] max-h-[65vh] overflow-y-auto">
-        {promptText ? (
-          <div className="relative">
-            {activeTab === 'formatted' ? (
-              <div className="prose prose-invert max-w-none text-[#EDE5DC] text-xs sm:text-sm leading-relaxed whitespace-pre-wrap font-sans">
+      {/* Main Prompt Content & Editor Workspace */}
+      <div className="relative rounded-md border border-[#E6DFD3] bg-[#221D1A] shadow-2xs dark:border-[#38312C] dark:bg-[#151210] overflow-hidden flex flex-col min-h-[380px] max-h-[65vh]">
+        {promptText || activeTab === 'edit' ? (
+          <div className="flex-1 overflow-y-auto p-4.5">
+            {activeTab === 'markdown' && (
+              <div className="prose prose-invert max-w-none text-[#EDE5DC] text-xs sm:text-sm leading-relaxed whitespace-pre-wrap font-sans select-text">
                 {promptText}
                 {isStreaming && (
                   <span className="inline-block w-1.5 h-3.5 ml-1 bg-[#C15F3D] animate-pulse align-middle" />
                 )}
               </div>
-            ) : (
-              <pre className="font-mono text-xs text-[#EDE5DC] leading-relaxed overflow-x-auto whitespace-pre-wrap">
+            )}
+
+            {activeTab === 'text' && (
+              <pre className="font-mono text-xs text-[#EDE5DC] leading-relaxed overflow-x-auto whitespace-pre-wrap select-text">
                 {promptText}
                 {isStreaming && (
                   <span className="inline-block w-1.5 h-3.5 ml-1 bg-[#C15F3D] animate-pulse align-middle" />
                 )}
               </pre>
             )}
+
+            {activeTab === 'edit' && (
+              <div className="h-full flex flex-col">
+                <textarea
+                  value={promptText}
+                  onChange={(e) => onChangePrompt?.(e.target.value)}
+                  placeholder={t.promptViewer.editorPlaceholder}
+                  disabled={isStreaming}
+                  className="w-full flex-1 min-h-[320px] bg-transparent text-xs sm:text-sm font-mono text-[#EDE5DC] leading-relaxed resize-none outline-hidden placeholder:text-[#7E7368]"
+                  spellCheck={false}
+                />
+              </div>
+            )}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-10 text-center text-[#8E8377]">
+          <div className="flex-1 flex flex-col items-center justify-center py-12 text-center text-[#8E8377]">
             <Sparkles className="h-6 w-6 text-[#C15F3D] animate-bounce mb-2" />
             <p className="text-xs font-medium">{t.promptViewer.waitingStream}</p>
           </div>
@@ -300,3 +333,4 @@ export function PromptViewer({
     </div>
   );
 }
+

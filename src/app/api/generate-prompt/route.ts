@@ -55,7 +55,7 @@ function getDomainSystemPrompt(domain: string, locale: string = 'vi'): string {
   }
 
   const langDirective = isVi
-    ? 'Synthesize the explanations, parameters, and structural markdown in Vietnamese (tiếng Việt). For Image Art Prompts, keep the copy-paste prompt core in English while explanations and parameters are in Vietnamese.'
+    ? 'All synthesized prompt content, instructions, parameters, guidelines, criteria, and explanations MUST BE ENTIRELY WRITTEN IN VIETNAMESE (100% tiếng Việt). Do NOT write English unless the user explicitly requested English in their seed or answer. Even for coding and writing domains, write all prompt specifications, roles, criteria, and rules in clear Vietnamese.'
     : 'Synthesize the output entirely in English.';
 
   return `You are a world-class Prompt Engineer and Prompt Synthesizer.

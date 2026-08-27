@@ -95,12 +95,25 @@ body {
   font-size: 13px !important;
   line-height: 1.6 !important;
   font-family: var(--font-geist-mono), monospace !important;
+  word-break: break-word !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
 }
 
 .w-md-editor-preview {
   background-color: #151210 !important;
   padding: 1rem !important;
   box-shadow: inset 1px 0 0 0 #38312C !important;
+  word-break: break-word !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+}
+
+.w-md-editor-preview pre,
+.w-md-editor-preview code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-x: hidden !important;
 }
 
 ::-webkit-scrollbar {

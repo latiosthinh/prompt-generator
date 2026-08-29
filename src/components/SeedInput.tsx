@@ -61,6 +61,38 @@ export function SeedInput({
     }
   };
 
+  const compressImage = async (file: File, maxDim = 1024, quality = 0.8): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve('');
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  };
+
   const processFiles = async (files: FileList | File[]) => {
     if (!onChangeAttachments) return;
     setErrorMessage(null);
@@ -82,20 +114,18 @@ export function SeedInput({
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
       if (file.type.startsWith('image/')) {
-        const dataUrl = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-
-        newAttachments.push({
-          id,
-          name: file.name,
-          type: file.type,
-          size: file.size,
-          dataUrl,
-        });
+        try {
+          const dataUrl = await compressImage(file);
+          newAttachments.push({
+            id,
+            name: file.name,
+            type: 'image/jpeg',
+            size: Math.round((dataUrl.length * 3) / 4),
+            dataUrl,
+          });
+        } catch {
+          setErrorMessage('Failed to read image');
+        }
       } else {
         const textContent = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();

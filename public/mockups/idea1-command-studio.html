@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea 1: Command-Driven Linear Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#121110] text-[#EDE5DC] h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- Top Global Header -->
+  <header class="h-12 border-b border-[#2B2520] bg-[#191614]/90 px-4 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="h-6 w-6 rounded bg-[#DA7756] flex items-center justify-center text-white text-xs font-bold shadow-xs">
+        <i class="fa-solid fa-terminal"></i>
+      </div>
+      <span class="font-bold text-sm tracking-tight text-[#FBF9F5]">PromptGenerator <span class="text-xs px-1.5 py-0.5 rounded bg-[#2B2520] text-[#DA7756] ml-1 font-mono">CMD-STUDIO</span></span>
+      
+      <div class="h-4 w-px bg-[#2B2520] mx-1"></div>
+
+      <!-- Domain Indicator -->
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#241F1C] border border-[#38312C] text-xs">
+        <i class="fa-solid fa-film text-[#DA7756]"></i>
+        <span class="font-medium text-[#EDE5DC]">/video-generation</span>
+        <span class="text-[10px] text-[#8E8377] font-mono">Press / to switch</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 text-xs font-mono text-[#8E8377]">
+      <span class="px-2 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#DA7756]"><i class="fa-solid fa-bolt mr-1"></i>Xiaomi-MiMo</span>
+      <button class="px-2 py-1 rounded hover:bg-[#241F1C] text-[#EDE5DC]"><i class="fa-solid fa-globe mr-1"></i>VI / EN</button>
+      <a href="index.html" class="px-2.5 py-1 rounded bg-[#DA7756] text-white font-sans font-semibold hover:bg-[#C15F3D]">View All Ideas</a>
+    </div>
+  </header>
+
+  <!-- Main Canvas & Inspector (Viewport Locked) -->
+  <div class="flex-1 flex min-h-0 overflow-hidden">
+    
+    <!-- Left 65%: Prompt Canvas / Output Buffer -->
+    <main class="flex-1 border-r border-[#2B2520] flex flex-col bg-[#161311] overflow-hidden">
+      <!-- Canvas Toolbar -->
+      <div class="h-10 border-b border-[#2B2520] px-4 flex items-center justify-between bg-[#191614]/50 shrink-0">
+        <div class="flex items-center gap-2 text-xs">
+          <span class="font-semibold text-[#B5A89B] font-mono">BUFFER: MASTER PROMPT</span>
+          <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono text-[10px] border border-emerald-500/20">V2.1 ACTIVE</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-2 py-1 rounded hover:bg-[#2B2520] text-xs text-[#B5A89B] hover:text-white transition"><i class="fa-regular fa-copy mr-1"></i>Copy (⌘C)</button>
+          <button class="px-2 py-1 rounded hover:bg-[#2B2520] text-xs text-[#B5A89B] hover:text-white transition"><i class="fa-solid fa-code-compare mr-1"></i>Diff Mode</button>
+          <button class="px-2 py-1 rounded hover:bg-[#2B2520] text-xs text-[#B5A89B] hover:text-white transition"><i class="fa-solid fa-download mr-1"></i>Export</button>
+        </div>
+      </div>
+
+      <!-- Canvas Content -->
+      <div class="flex-1 p-5 overflow-y-auto font-mono text-xs leading-relaxed space-y-4">
+        <div class="p-3.5 rounded-md border border-[#2B2520] bg-[#1E1A17] space-y-2">
+          <div class="text-[#8E8377] text-[11px] font-bold tracking-wider">// SYSTEM / ENGINE CONFIG</div>
+          <p class="text-[#DA7756]">Target Engine: Runway Gen-3 Alpha / Sora Cinema Mode | Aspect: 16:9 | FPS: 24fps | Motion: Dynamic</p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="text-[#8E8377] text-[11px] font-bold tracking-wider">// PRIMARY CINEMATIC PROMPT</div>
+          <div class="p-4 rounded-md border border-[#38312C] bg-[#1A1614] text-[#EDE5DC] select-text">
+            <p class="text-emerald-400 font-semibold mb-2">/video prompt: High-speed cinematic FPV drone fly-through shot navigating through a rainy neon-drenched futuristic alley in Neo-Tokyo...</p>
+            <ul class="list-disc list-inside space-y-1 text-[#B5A89B] pl-2 text-[11px]">
+              <li><strong class="text-[#EDE5DC]">Camera Trajectory:</strong> Starts 10m high, dives aggressively under holographic billboards, executing a smooth 360° orbit around a cybernetic artisan.</li>
+              <li><strong class="text-[#EDE5DC]">Lighting & Atmosphere:</strong> Volumetric cyan and magenta light shafts reflected on wet asphalt puddles, dense humid mist with floating embers.</li>
+              <li><strong class="text-[#EDE5DC]">Pacing & Physics:</strong> Natural 24fps cinematic shutter motion blur, water droplet displacement with photorealistic fluid dynamics.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-md border border-[#2B2520] bg-[#191614] text-[11px] text-[#8E8377] flex items-center justify-between">
+          <span>Words: 142 • Characters: 980 • Est Tokens: ~245</span>
+          <span class="text-emerald-400"><i class="fa-solid fa-check-circle mr-1"></i>Synthesized & Verified</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right 35%: Inspector & Triage Queue -->
+    <aside class="w-96 border-l border-[#2B2520] bg-[#191614] flex flex-col shrink-0">
+      <div class="h-10 border-b border-[#2B2520] px-4 flex items-center justify-between shrink-0">
+        <span class="text-xs font-bold text-[#EDE5DC] uppercase tracking-wider flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-[#DA7756]"></i> Clarification & Tokens
+        </span>
+        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#DA7756]/15 text-[#DA7756] font-mono">2 Resolved</span>
+      </div>
+
+      <div class="flex-1 p-4 overflow-y-auto space-y-4">
+        <!-- Pinned Attributes HUD -->
+        <div class="space-y-2">
+          <div class="text-[11px] font-bold text-[#8E8377] uppercase tracking-wider">Pinned Parameters</div>
+          <div class="grid grid-cols-2 gap-1.5 text-xs font-mono">
+            <div class="p-2 rounded bg-[#241F1C] border border-[#38312C] flex items-center justify-between">
+              <span class="text-[#8E8377]">Ratio:</span>
+              <span class="text-[#DA7756] font-bold">16:9</span>
+            </div>
+            <div class="p-2 rounded bg-[#241F1C] border border-[#38312C] flex items-center justify-between">
+              <span class="text-[#8E8377]">Motion:</span>
+              <span class="text-[#DA7756] font-bold">Dynamic</span>
+            </div>
+            <div class="p-2 rounded bg-[#241F1C] border border-[#38312C] flex items-center justify-between">
+              <span class="text-[#8E8377]">Camera:</span>
+              <span class="text-[#DA7756] font-bold">FPV Drone</span>
+            </div>
+            <div class="p-2 rounded bg-[#241F1C] border border-[#38312C] flex items-center justify-between">
+              <span class="text-[#8E8377]">FPS:</span>
+              <span class="text-[#DA7756] font-bold">24fps</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Triage Questionnaire Stack -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-[#8E8377] uppercase tracking-wider">Dynamic Q&A Matrix</span>
+            <span class="text-[10px] text-[#DA7756] cursor-pointer hover:underline">Re-generate Qs</span>
+          </div>
+
+          <div class="p-3 rounded-md border border-[#38312C] bg-[#241F1C] space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-[#EDE5DC]">1. Camera Shutter & Blur?</span>
+              <span class="text-[10px] text-emerald-400 font-mono">Answered</span>
+            </div>
+            <div class="flex flex-wrap gap-1">
+              <span class="px-2 py-0.5 rounded bg-[#DA7756] text-white text-[11px] font-medium">180° Cinematic Shutter</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-md border border-[#38312C] bg-[#241F1C] space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-[#EDE5DC]">2. Sound Design & Ambience?</span>
+              <span class="text-[10px] text-[#8E8377] font-mono">[Tab] Skip</span>
+            </div>
+            <div class="flex flex-wrap gap-1">
+              <button class="px-2 py-0.5 rounded bg-[#191614] border border-[#38312C] hover:border-[#DA7756] text-[#B5A89B] text-[11px]">Synthwave Bass</button>
+              <button class="px-2 py-0.5 rounded bg-[#191614] border border-[#38312C] hover:border-[#DA7756] text-[#B5A89B] text-[11px]">Heavy Rain Ambience</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media Attachment Token -->
+        <div class="space-y-2">
+          <div class="text-[11px] font-bold text-[#8E8377] uppercase tracking-wider">Attached Assets (2)</div>
+          <div class="flex items-center gap-2 p-2 rounded bg-[#241F1C] border border-[#38312C] text-xs">
+            <i class="fa-solid fa-image text-[#DA7756]"></i>
+            <span class="truncate flex-1 font-mono text-[11px]">tokyo_alley_ref.png</span>
+            <span class="text-[10px] text-[#8E8377]">1.2MB</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Bottom Floating Command Omni-Bar (Linear / Raycast Style) -->
+  <div class="p-4 bg-[#141210] border-t border-[#2B2520] shrink-0">
+    <div class="max-w-4xl mx-auto">
+      <div class="relative flex items-center rounded-lg border border-[#38312C] bg-[#1E1A17] px-3 py-2 shadow-2xl focus-within:border-[#DA7756] focus-within:ring-1 focus-within:ring-[#DA7756]/40 transition">
+        <span class="text-[#DA7756] font-mono font-bold mr-2 text-sm">&gt;</span>
+        <input 
+          type="text" 
+          value="/video :ratio 16:9 :motion dynamic :cam fpv-drone @tokyo_alley_ref.png A cyberpunk drone flight through rainy alleys..." 
+          class="flex-1 bg-transparent text-xs sm:text-sm text-[#EDE5DC] focus:outline-hidden font-mono"
+          placeholder="Type / for domains, : for parameters, @ to attach, or your raw prompt idea..."
+        />
+        <div class="flex items-center gap-2 ml-2">
+          <button class="px-3 py-1.5 rounded-md bg-[#DA7756] hover:bg-[#C15F3D] text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Synthesize (⌘↵)
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-[11px] text-[#8E8377] font-mono mt-2 px-1">
+        <div class="flex items-center gap-3">
+          <span><kbd class="px-1 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC]">/</kbd> Domain</span>
+          <span><kbd class="px-1 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC]">:</kbd> Attributes</span>
+          <span><kbd class="px-1 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC]">@</kbd> File</span>
+        </div>
+        <div>
+          <span><kbd class="px-1 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC]">Tab</kbd> Cycle Qs • <kbd class="px-1 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC]">⌘K</kbd> Command Palette</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

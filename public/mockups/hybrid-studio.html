@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid Studio: Unified Master Prompt Engineering Architecture</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #14110F; }
+    ::-webkit-scrollbar-thumb { background: #2B2520; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38312C; }
+  </style>
+</head>
+<body class="bg-[#100E0D] text-[#EDE5DC] h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP BAR: Type Selection (Opt 2) + Global Status + Actions -->
+  <!-- ========================================================================= -->
+  <header class="h-14 border-b border-[#2B2520] bg-[#161311] px-4 flex items-center justify-between shrink-0">
+    <!-- Left: Branding & Model -->
+    <div class="flex items-center gap-3">
+      <div class="h-7 w-7 rounded-lg bg-gradient-to-br from-[#DA7756] to-[#C15F3D] flex items-center justify-center text-white text-xs font-bold shadow-md">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-extrabold text-sm tracking-tight text-[#FBF9F5]">PromptGenerator</span>
+        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#241F1C] text-[#DA7756] border border-[#38312C]">HYBRID-PRO</span>
+      </div>
+    </div>
+
+    <!-- Center: Option 2 Segmented Domain Type Switcher -->
+    <div class="flex items-center p-1 rounded-xl bg-[#1E1917] border border-[#38312C] gap-1 text-xs">
+      <button onclick="setDomain('image')" id="dom-image" class="domain-tab px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-image text-[11px]"></i> <span>Image Art</span>
+      </button>
+      <button onclick="setDomain('video')" id="dom-video" class="domain-tab px-3 py-1 rounded-lg bg-[#DA7756] text-white font-bold flex items-center gap-1.5 shadow-xs transition">
+        <i class="fa-solid fa-film text-[11px]"></i> <span>Video Gen</span>
+      </button>
+      <button onclick="setDomain('code')" id="dom-code" class="domain-tab px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-code text-[11px]"></i> <span>Coding</span>
+      </button>
+      <button onclick="setDomain('writing')" id="dom-writing" class="domain-tab px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-pen-nib text-[11px]"></i> <span>Writing</span>
+      </button>
+      <button onclick="setDomain('agent')" id="dom-agent" class="domain-tab px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-robot text-[11px]"></i> <span>Agent / System</span>
+      </button>
+      <button onclick="setDomain('custom')" id="dom-custom" class="domain-tab px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-sparkles text-[11px]"></i> <span>Custom</span>
+      </button>
+    </div>
+
+    <!-- Right: Metrics & Actions -->
+    <div class="flex items-center gap-2.5 text-xs font-mono">
+      <span class="px-2 py-1 rounded bg-[#1C1816] border border-[#2B2520] text-emerald-400 text-[11px]">
+        <i class="fa-solid fa-bolt text-[10px] mr-1"></i>Xiaomi-MiMo v2.1
+      </span>
+      <button class="px-2.5 py-1 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC] hover:border-[#DA7756] transition font-sans">
+        <i class="fa-solid fa-globe text-[#DA7756] mr-1"></i> VI / EN
+      </button>
+      <button class="px-3 py-1 rounded bg-[#DA7756] hover:bg-[#C15F3D] text-white font-bold font-sans shadow-xs flex items-center gap-1.5 transition">
+        <i class="fa-regular fa-copy"></i> Copy Master
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN 3-PANE WORKSPACE -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 flex min-h-0 overflow-hidden">
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- LEFT PANE: Option 3 Navigator / Session Tree (250px) -->
+    <!-- ----------------------------------------------------------------------- -->
+    <aside id="left-navigator" class="w-64 border-r border-[#2B2520] bg-[#14110F] flex flex-col justify-between shrink-0">
+      <div class="p-3 space-y-3 flex-1 overflow-y-auto">
+        <!-- New Session Button -->
+        <button class="w-full py-2 px-3 rounded-lg bg-[#241F1C] hover:bg-[#2E2723] border border-[#38312C] text-xs font-bold text-[#EDE5DC] flex items-center justify-between transition group">
+          <span class="flex items-center gap-2">
+            <i class="fa-solid fa-plus text-[#DA7756]"></i> New Studio Session
+          </span>
+          <kbd class="px-1.5 py-0.5 rounded bg-[#191614] text-[10px] font-mono text-[#8E8377] group-hover:text-[#EDE5DC]">⌘N</kbd>
+        </button>
+
+        <!-- Session Tree -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-[10px] font-bold text-[#8E8377] uppercase tracking-wider px-1">
+            <span>Session History</span>
+            <span class="text-[#DA7756]">3 Active</span>
+          </div>
+
+          <!-- Active Session -->
+          <div class="p-2.5 rounded-lg bg-[#1E1917] border border-[#DA7756]/50 space-y-1 text-xs cursor-pointer shadow-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 font-bold text-[#FBF9F5] truncate">
+                <i class="fa-solid fa-film text-[#DA7756] text-xs"></i>
+                <span class="truncate">FPV Drone Neo-Tokyo</span>
+              </div>
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            </div>
+            <div class="flex items-center gap-2 text-[10px] text-[#8E8377] font-mono pl-5">
+              <span>R2</span>
+              <span>•</span>
+              <span>16:9 Widescreen</span>
+              <span>•</span>
+              <span>24fps</span>
+            </div>
+          </div>
+
+          <!-- Inactive Session 2 -->
+          <div class="p-2.5 rounded-lg hover:bg-[#1E1917] border border-transparent hover:border-[#38312C] text-xs text-[#8E8377] hover:text-[#EDE5DC] cursor-pointer transition space-y-1">
+            <div class="flex items-center gap-2 font-medium truncate">
+              <i class="fa-solid fa-code text-xs"></i>
+              <span class="truncate">Fastify Rate Limiter Spec</span>
+            </div>
+            <div class="text-[10px] text-[#6B6258] font-mono pl-5">R1 • TypeScript Strict</div>
+          </div>
+
+          <!-- Inactive Session 3 -->
+          <div class="p-2.5 rounded-lg hover:bg-[#1E1917] border border-transparent hover:border-[#38312C] text-xs text-[#8E8377] hover:text-[#EDE5DC] cursor-pointer transition space-y-1">
+            <div class="flex items-center gap-2 font-medium truncate">
+              <i class="fa-solid fa-robot text-xs"></i>
+              <span class="truncate">Financial Analyst Agent</span>
+            </div>
+            <div class="text-[10px] text-[#6B6258] font-mono pl-5">R3 • JSON Contracts</div>
+          </div>
+        </div>
+
+        <!-- Presets & Templates -->
+        <div class="space-y-1.5 pt-2 border-t border-[#241F1C]">
+          <div class="text-[10px] font-bold text-[#8E8377] uppercase tracking-wider px-1">
+            Domain Starters
+          </div>
+          <div class="space-y-1 text-xs">
+            <button class="w-full text-left p-1.5 rounded hover:bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-between transition">
+              <span class="truncate">Runway Gen-3 Cinema Rig</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </button>
+            <button class="w-full text-left p-1.5 rounded hover:bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-between transition">
+              <span class="truncate">Midjourney v6 Photoreal</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Left Bottom User/Store Status -->
+      <div class="p-3 border-t border-[#241F1C] bg-[#100E0D] text-[11px] text-[#8E8377] flex items-center justify-between">
+        <span><i class="fa-solid fa-database mr-1 text-[#DA7756]"></i> LocalStore LRU</span>
+        <button class="hover:text-red-400 transition" title="Clear all sessions"><i class="fa-regular fa-trash-can"></i></button>
+      </div>
+    </aside>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- CENTER PANE: Master Workbench + Option 4 Clarify + TALL Option 1 Input -->
+    <!-- ----------------------------------------------------------------------- -->
+    <main class="flex-1 flex flex-col bg-[#161311] overflow-hidden min-w-0">
+
+      <!-- Center Sub-Header: Mode Switcher (Questions vs Master Output) -->
+      <div class="h-10 border-b border-[#2B2520] px-4 flex items-center justify-between bg-[#191614] shrink-0 text-xs">
+        <div class="flex items-center gap-2">
+          <!-- View Toggle -->
+          <button onclick="setViewMode('clarify')" id="view-btn-clarify" class="px-2.5 py-1 rounded bg-[#241F1C] text-[#DA7756] font-bold border border-[#38312C] flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-circle-question"></i> Clarification Matrix (Opt 4)
+            <span class="h-1.5 w-1.5 rounded-full bg-[#DA7756] animate-pulse"></span>
+          </button>
+          <button onclick="setViewMode('output')" id="view-btn-output" class="px-2.5 py-1 rounded text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-code"></i> Master Prompt Buffer
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3 text-xs font-mono text-[#8E8377]">
+          <span>Words: 168</span>
+          <span>•</span>
+          <span>Tokens: ~284</span>
+          <span>•</span>
+          <span class="text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i>Ready</span>
+        </div>
+      </div>
+
+      <!-- Center Scrollable Work Area -->
+      <div class="flex-1 p-5 overflow-y-auto space-y-4">
+
+        <!-- VIEW A: Option 4 Clarification Matrix Cards -->
+        <div id="view-clarify" class="space-y-4">
+          <!-- Disambiguation Progress Header -->
+          <div class="p-4 rounded-xl border border-[#38312C] bg-[#1E1917] flex items-center justify-between shadow-md">
+            <div>
+              <h3 class="text-sm font-bold text-[#FBF9F5] flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-[#DA7756]"></i>
+                <span>Adaptive Clarification Matrix</span>
+                <span class="text-xs font-mono font-normal text-[#8E8377]">(2 of 2 answered)</span>
+              </h3>
+              <p class="text-xs text-[#8E8377] mt-0.5">Click answer chips or let AI auto-decide to maximize prompt accuracy.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-3 py-1 rounded-lg bg-[#241F1C] hover:bg-[#2E2723] border border-[#38312C] text-xs font-semibold text-[#EDE5DC]">AI Decide All</button>
+            </div>
+          </div>
+
+          <!-- Question Card 1 -->
+          <div class="p-4 rounded-xl border border-[#38312C] bg-[#1A1614] space-y-2.5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-[#EDE5DC]">1. Camera Trajectory & Focal Dynamics</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">Selected</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <button class="p-2.5 rounded-lg bg-[#DA7756] text-white font-bold text-left flex items-center justify-between shadow-xs">
+                <span>18mm FPV Wide Drone Dive</span>
+                <i class="fa-solid fa-check text-xs"></i>
+              </button>
+              <button class="p-2.5 rounded-lg bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-left hover:border-[#DA7756] hover:text-[#EDE5DC]">
+                <span>50mm Smooth Dolly Follow</span>
+              </button>
+              <button class="p-2.5 rounded-lg bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-left hover:border-[#DA7756] hover:text-[#EDE5DC]">
+                <span>360° Orbital Telephoto Arc</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Question Card 2 -->
+          <div class="p-4 rounded-xl border border-[#38312C] bg-[#1A1614] space-y-2.5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-[#EDE5DC]">2. Lighting Atmosphere & Fluid Particles</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">Multiple Choices</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <button class="p-2.5 rounded-lg bg-[#DA7756] text-white font-bold text-left flex items-center justify-between shadow-xs">
+                <span>Volumetric Neon Light Shafts</span>
+                <i class="fa-solid fa-check text-xs"></i>
+              </button>
+              <button class="p-2.5 rounded-lg bg-[#DA7756] text-white font-bold text-left flex items-center justify-between shadow-xs">
+                <span>Rain Wet Asphalt Reflections</span>
+                <i class="fa-solid fa-check text-xs"></i>
+              </button>
+              <button class="p-2.5 rounded-lg bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-left hover:border-[#DA7756] hover:text-[#EDE5DC]">
+                <span>Floating Sparks & Steam</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW B: Master Prompt Output Buffer (Initially hidden or switchable) -->
+        <div id="view-output" class="hidden space-y-3 font-mono text-xs leading-relaxed">
+          <div class="p-4 rounded-xl border border-[#38312C] bg-[#141210] space-y-3">
+            <div class="flex items-center justify-between border-b border-[#241F1C] pb-2 font-sans">
+              <span class="font-bold text-xs text-[#DA7756]">### MASTER CINEMATIC VIDEO SPECIFICATION</span>
+              <span class="text-[11px] text-emerald-400 font-mono">Runway Gen-3 / Sora Format</span>
+            </div>
+            <p class="text-emerald-400 font-medium select-text">
+              /video prompt: Ultra-photorealistic cinematic FPV drone flight sequence navigating through rain-drenched Neo-Tokyo alleyways at dusk.
+            </p>
+            <p class="text-[#B5A89B] select-text">
+              The camera executes an aggressive descending dive from high rooflines beneath neon paper lanterns, weaving between glowing holographic signs before executing a fluid 360-degree orbital rotation around a cybernetic craftsman assembling an incandescent glass lotus.
+            </p>
+            <div class="p-3 rounded-lg bg-[#1E1917] border border-[#2B2520] text-[#DA7756] font-bold select-text">
+              --ar 16:9 --motion 4 --fps 24 --camera fpv-drone-dive --lighting volumetric-cyan --render octane-cinema
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- --------------------------------------------------------------------- -->
+      <!-- BOTTOM: Option 1 Command Prompt Input (BIGGER & TALLER min-h-[160px]) -->
+      <!-- --------------------------------------------------------------------- -->
+      <div class="p-4 bg-[#14110F] border-t border-[#2B2520] shrink-0 space-y-2">
+        
+        <!-- Big Command Container -->
+        <div class="rounded-xl border border-[#38312C] bg-[#1E1917] p-3 shadow-2xl focus-within:border-[#DA7756] focus-within:ring-1 focus-within:ring-[#DA7756]/40 transition space-y-2.5">
+          
+          <!-- Top Token Pills & Attached Files (Inside Command Box) -->
+          <div class="flex flex-wrap items-center gap-1.5 pb-2 border-b border-[#2B2520]/80">
+            <span class="px-2 py-0.5 rounded bg-[#DA7756]/20 border border-[#DA7756]/40 text-[#DA7756] text-[11px] font-mono font-bold">/video-gen</span>
+            <span class="px-2 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-[11px] font-mono">:ratio 16:9</span>
+            <span class="px-2 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-[11px] font-mono">:motion dynamic</span>
+            <span class="px-2 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-[11px] font-mono">:camera fpv-drone</span>
+
+            <!-- Attached File Chip -->
+            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#241F1C] border border-[#38312C] text-[11px] text-[#EDE5DC]">
+              <i class="fa-solid fa-image text-[#DA7756] text-[10px]"></i>
+              <span class="max-w-[120px] truncate font-mono text-[10px]">tokyo_alley_ref.png</span>
+              <button class="hover:text-red-400 text-[10px] ml-0.5"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Reverse Deconstruct Trigger -->
+            <button class="px-2 py-0.5 rounded bg-[#241F1C] hover:bg-[#DA7756] hover:text-white border border-[#38312C] text-[10px] text-[#DA7756] font-semibold transition flex items-center gap-1 ml-auto">
+              <i class="fa-solid fa-wand-sparkles text-[9px]"></i> Deconstruct File
+            </button>
+          </div>
+
+          <!-- TALL Textarea (Bigger / Higher as requested: min-h-[90px] - max-h-[160px]) -->
+          <textarea 
+            rows="3"
+            class="w-full bg-transparent text-xs sm:text-sm leading-relaxed text-[#EDE5DC] placeholder:text-[#8E8377] focus:outline-hidden font-mono resize-y min-h-[80px]"
+            placeholder="Type your prompt seed, or / for domain, : for attributes, @ to attach files..."
+          >Cinematic FPV racing drone sequence flying through rainy neon Tokyo alleys under glowing lanterns with a 360 orbit around an artisan.</textarea>
+
+          <!-- Bottom Toolbar inside Command Box -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#2B2520]/80">
+            <div class="flex items-center gap-2">
+              <button class="px-2.5 py-1 rounded bg-[#241F1C] hover:bg-[#2E2723] border border-[#38312C] text-xs text-[#B5A89B] hover:text-[#EDE5DC] flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-paperclip text-[#DA7756]"></i>
+                <span>Attach Files</span>
+              </button>
+              <span class="text-[11px] text-[#8E8377] font-mono hidden sm:inline">Drop files directly anywhere</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] text-[#8E8377] font-mono hidden md:inline">⌘↵ to execute</span>
+              <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-[#DA7756] to-[#C15F3D] hover:opacity-95 text-white font-bold text-xs shadow-lg flex items-center gap-2 transition cursor-pointer">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Synthesize Master Prompt
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Keyboard Helpers -->
+        <div class="flex items-center justify-between text-[10px] text-[#8E8377] font-mono px-1">
+          <div class="flex items-center gap-3">
+            <span><kbd class="px-1 py-0.5 rounded bg-[#1E1917] border border-[#2B2520] text-[#EDE5DC]">/</kbd> Domain</span>
+            <span><kbd class="px-1 py-0.5 rounded bg-[#1E1917] border border-[#2B2520] text-[#EDE5DC]">:</kbd> Parameter Pins</span>
+            <span><kbd class="px-1 py-0.5 rounded bg-[#1E1917] border border-[#2B2520] text-[#EDE5DC]">@</kbd> Media Ingest</span>
+          </div>
+          <div>
+            <span><kbd class="px-1 py-0.5 rounded bg-[#1E1917] border border-[#2B2520] text-[#EDE5DC]">Ctrl+Enter</kbd> Synthesize • <kbd class="px-1 py-0.5 rounded bg-[#1E1917] border border-[#2B2520] text-[#EDE5DC]">Tab</kbd> Answer Matrix</span>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- RIGHT PANE: Option 3 Multi-Tab Parameter Dock & Cheatsheet (320px) -->
+    <!-- ----------------------------------------------------------------------- -->
+    <aside id="right-inspector" class="w-80 border-l border-[#2B2520] bg-[#14110F] flex flex-col shrink-0">
+      <!-- Inspector Tabs -->
+      <div class="h-10 border-b border-[#2B2520] flex items-center bg-[#191614] text-xs font-semibold shrink-0">
+        <button onclick="setInspectorTab('params')" id="tab-insp-params" class="flex-1 h-full border-b-2 border-[#DA7756] text-[#EDE5DC] flex items-center justify-center gap-1.5 transition">
+          <i class="fa-solid fa-sliders text-[11px] text-[#DA7756]"></i> Parameters
+        </button>
+        <button onclick="setInspectorTab('cheat')" id="tab-insp-cheat" class="flex-1 h-full text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-center gap-1.5 transition">
+          <i class="fa-solid fa-book-open text-[11px]"></i> Cheatsheet
+        </button>
+      </div>
+
+      <!-- Inspector Content Body -->
+      <div class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
+
+        <!-- TAB 1: PARAMETER CONTROLS -->
+        <div id="insp-params" class="space-y-4">
+          <!-- Aspect Ratio Group -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Aspect Ratio</label>
+            <div class="grid grid-cols-4 gap-1 text-center font-mono">
+              <button class="py-1.5 rounded bg-[#DA7756] text-white font-bold">16:9</button>
+              <button class="py-1.5 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756]">9:16</button>
+              <button class="py-1.5 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756]">1:1</button>
+              <button class="py-1.5 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756]">2.39:1</button>
+            </div>
+          </div>
+
+          <!-- Resolution Quality -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Resolution</label>
+            <div class="grid grid-cols-3 gap-1 text-center font-mono">
+              <button class="py-1.5 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756]">HD (720p)</button>
+              <button class="py-1.5 rounded bg-[#DA7756] text-white font-bold">FullHD</button>
+              <button class="py-1.5 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756]">4K Ultra</button>
+            </div>
+          </div>
+
+          <!-- Motion Dynamics Slider -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-[11px]">
+              <span class="font-bold text-[#8E8377] uppercase">Motion Dynamics</span>
+              <span class="text-[#DA7756] font-mono font-bold">Dynamic (Level 4)</span>
+            </div>
+            <input type="range" min="1" max="5" value="4" class="w-full accent-[#DA7756] bg-[#1E1917] h-1.5 rounded-lg cursor-pointer">
+          </div>
+
+          <!-- Camera Movement Trajectory -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Camera Movement</label>
+            <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+              <button class="p-2 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756] text-left">Static Fixed</button>
+              <button class="p-2 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756] text-left">Pan / Tilt</button>
+              <button class="p-2 rounded bg-[#DA7756] text-white font-bold text-left shadow-xs">FPV Drone Dive</button>
+              <button class="p-2 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756] text-left">360° Orbit</button>
+            </div>
+          </div>
+
+          <!-- Frame Rate (FPS) -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Frame Rate (FPS)</label>
+            <div class="grid grid-cols-3 gap-1 text-center font-mono">
+              <button class="py-1.5 rounded bg-[#DA7756] text-white font-bold">24fps (Film)</button>
+              <button class="py-1.5 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756]">30fps</button>
+              <button class="py-1.5 rounded bg-[#1E1917] border border-[#38312C] text-[#B5A89B] hover:border-[#DA7756]">60fps (Slow)</button>
+            </div>
+          </div>
+
+          <!-- Negative Exclusions -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Negative Constraints</label>
+            <input type="text" value="blur, morphing, jitter, low quality, artifacts" class="w-full p-2 rounded bg-[#1E1917] border border-[#38312C] text-[#EDE5DC] text-xs font-mono focus:border-[#DA7756] focus:outline-hidden">
+          </div>
+        </div>
+
+        <!-- TAB 2: CHEATSHEET & VOCABULARY -->
+        <div id="insp-cheat" class="hidden space-y-3">
+          <div class="text-[11px] font-bold text-[#8E8377] uppercase">Video Motion Vocabulary</div>
+          <div class="flex flex-wrap gap-1">
+            <span class="px-2 py-1 rounded bg-[#1E1917] border border-[#38312C] text-[#EDE5DC] text-[10px] cursor-pointer hover:border-[#DA7756]">+ FPV Dive</span>
+            <span class="px-2 py-1 rounded bg-[#1E1917] border border-[#38312C] text-[#EDE5DC] text-[10px] cursor-pointer hover:border-[#DA7756]">+ 360 Orbit</span>
+            <span class="px-2 py-1 rounded bg-[#1E1917] border border-[#38312C] text-[#EDE5DC] text-[10px] cursor-pointer hover:border-[#DA7756]">+ Dolly Vertigo</span>
+            <span class="px-2 py-1 rounded bg-[#1E1917] border border-[#38312C] text-[#EDE5DC] text-[10px] cursor-pointer hover:border-[#DA7756]">+ Volumetric Fog</span>
+            <span class="px-2 py-1 rounded bg-[#1E1917] border border-[#38312C] text-[#EDE5DC] text-[10px] cursor-pointer hover:border-[#DA7756]">+ Golden Hour</span>
+            <span class="px-2 py-1 rounded bg-[#1E1917] border border-[#38312C] text-[#EDE5DC] text-[10px] cursor-pointer hover:border-[#DA7756]">+ 180° Shutter Blur</span>
+          </div>
+
+          <div class="pt-3 border-t border-[#241F1C] text-[11px] font-bold text-[#8E8377] uppercase">Supported Video Engines</div>
+          <div class="space-y-1 text-xs text-[#B5A89B]">
+            <div>• <strong>Runway Gen-3 Alpha</strong> (Camera motion tags)</div>
+            <div>• <strong>OpenAI Sora</strong> (Temporal consistency)</div>
+            <div>• <strong>Kling 1.5 HD</strong> (Action dynamics)</div>
+            <div>• <strong>Luma Dream Machine</strong> (Physics flow)</div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Interactive JavaScript logic -->
+  <script>
+    function setDomain(dom) {
+      document.querySelectorAll('.domain-tab').forEach(b => {
+        b.className = "domain-tab px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition";
+      });
+      document.getElementById('dom-' + dom).className = "domain-tab px-3 py-1 rounded-lg bg-[#DA7756] text-white font-bold flex items-center gap-1.5 shadow-xs transition";
+    }
+
+    function setViewMode(mode) {
+      if (mode === 'clarify') {
+        document.getElementById('view-clarify').classList.remove('hidden');
+        document.getElementById('view-output').classList.add('hidden');
+        document.getElementById('view-btn-clarify').className = "px-2.5 py-1 rounded bg-[#241F1C] text-[#DA7756] font-bold border border-[#38312C] flex items-center gap-1.5 transition";
+        document.getElementById('view-btn-output').className = "px-2.5 py-1 rounded text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition";
+      } else {
+        document.getElementById('view-clarify').classList.add('hidden');
+        document.getElementById('view-output').classList.remove('hidden');
+        document.getElementById('view-btn-output').className = "px-2.5 py-1 rounded bg-[#241F1C] text-[#DA7756] font-bold border border-[#38312C] flex items-center gap-1.5 transition";
+        document.getElementById('view-btn-clarify').className = "px-2.5 py-1 rounded text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5 transition";
+      }
+    }
+
+    function setInspectorTab(tab) {
+      if (tab === 'params') {
+        document.getElementById('insp-params').classList.remove('hidden');
+        document.getElementById('insp-cheat').classList.add('hidden');
+        document.getElementById('tab-insp-params').className = "flex-1 h-full border-b-2 border-[#DA7756] text-[#EDE5DC] flex items-center justify-center gap-1.5 transition";
+        document.getElementById('tab-insp-cheat').className = "flex-1 h-full text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-center gap-1.5 transition";
+      } else {
+        document.getElementById('insp-params').classList.add('hidden');
+        document.getElementById('insp-cheat').classList.remove('hidden');
+        document.getElementById('tab-insp-cheat').className = "flex-1 h-full border-b-2 border-[#DA7756] text-[#EDE5DC] flex items-center justify-center gap-1.5 transition";
+        document.getElementById('tab-insp-params').className = "flex-1 h-full text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-center gap-1.5 transition";
+      }
+    }
+  </script>
+
+</body>
+</html>

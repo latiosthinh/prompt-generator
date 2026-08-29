@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea 4: Stepped Prompt Engineering Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#12110F] text-[#EDE5DC] h-screen flex flex-col justify-between overflow-hidden">
+
+  <!-- Top Header with 3-Stage Milestone Stepper -->
+  <header class="h-16 border-b border-[#2B2520] bg-[#181513]/90 backdrop-blur-md px-6 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="h-8 w-8 rounded-xl bg-[#DA7756] flex items-center justify-center text-white text-sm font-bold shadow-md">
+        <i class="fa-solid fa-flask"></i>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-[#FBF9F5]">PromptGenerator <span class="text-xs text-[#DA7756] font-mono ml-1">STEP-LAB</span></h1>
+      </div>
+    </div>
+
+    <!-- Centered 3-Stage Milestone Stepper -->
+    <div class="flex items-center gap-2 p-1 rounded-xl bg-[#221D1A] border border-[#38312C] text-xs">
+      <!-- Step 1 (Completed) -->
+      <button onclick="setStage(1)" id="step-btn-1" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] transition cursor-pointer">
+        <span class="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]"><i class="fa-solid fa-check"></i></span>
+        <span class="font-semibold">1. Intent & Media</span>
+      </button>
+
+      <i class="fa-solid fa-chevron-right text-[10px] text-[#4A413B]"></i>
+
+      <!-- Step 2 (Completed) -->
+      <button onclick="setStage(2)" id="step-btn-2" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] transition cursor-pointer">
+        <span class="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]"><i class="fa-solid fa-check"></i></span>
+        <span class="font-semibold">2. Clarify (3 Qs)</span>
+      </button>
+
+      <i class="fa-solid fa-chevron-right text-[10px] text-[#4A413B]"></i>
+
+      <!-- Step 3 (Active) -->
+      <button onclick="setStage(3)" id="step-btn-3" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#DA7756] text-white font-bold shadow-xs transition cursor-pointer">
+        <span class="h-5 w-5 rounded-full bg-white/20 text-white font-bold flex items-center justify-center text-[10px]">3</span>
+        <span>3. Master Studio</span>
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <a href="index.html" class="px-3 py-1.5 rounded-lg bg-[#241F1C] border border-[#38312C] text-xs font-semibold text-[#EDE5DC] hover:border-[#DA7756]">All 4 Ideas</a>
+    </div>
+  </header>
+
+  <!-- Stage Views Container -->
+  <main class="flex-1 overflow-y-auto p-6 flex items-center justify-center bg-[#151210]">
+    <div class="w-full max-w-4xl">
+
+      <!-- STAGE 1: INTENT & MEDIA INTAKE -->
+      <div id="stage-1" class="hidden space-y-6 animate-in fade-in">
+        <div class="space-y-1 text-center">
+          <h2 class="text-xl font-bold text-[#FBF9F5]">Stage 1: Define Target Domain & Prompt Seed</h2>
+          <p class="text-xs text-[#8E8377]">Select your AI modality, enter raw seed ideas, or drop visual media to deconstruct.</p>
+        </div>
+
+        <!-- Domain Pills -->
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+          <button class="p-3 rounded-xl bg-[#221D1A] border border-[#38312C] hover:border-[#DA7756] flex flex-col items-center gap-2 text-xs font-semibold text-[#B5A89B] hover:text-[#EDE5DC]">
+            <i class="fa-solid fa-image text-lg"></i> Image Art
+          </button>
+          <button class="p-3 rounded-xl bg-[#DA7756] border border-[#DA7756] flex flex-col items-center gap-2 text-xs font-bold text-white shadow-md">
+            <i class="fa-solid fa-film text-lg"></i> Video Gen
+          </button>
+          <button class="p-3 rounded-xl bg-[#221D1A] border border-[#38312C] hover:border-[#DA7756] flex flex-col items-center gap-2 text-xs font-semibold text-[#B5A89B] hover:text-[#EDE5DC]">
+            <i class="fa-solid fa-code text-lg"></i> Code & Tech
+          </button>
+          <button class="p-3 rounded-xl bg-[#221D1A] border border-[#38312C] hover:border-[#DA7756] flex flex-col items-center gap-2 text-xs font-semibold text-[#B5A89B] hover:text-[#EDE5DC]">
+            <i class="fa-solid fa-pen-nib text-lg"></i> Writing
+          </button>
+          <button class="p-3 rounded-xl bg-[#221D1A] border border-[#38312C] hover:border-[#DA7756] flex flex-col items-center gap-2 text-xs font-semibold text-[#B5A89B] hover:text-[#EDE5DC]">
+            <i class="fa-solid fa-robot text-lg"></i> AI Agent
+          </button>
+          <button class="p-3 rounded-xl bg-[#221D1A] border border-[#38312C] hover:border-[#DA7756] flex flex-col items-center gap-2 text-xs font-semibold text-[#B5A89B] hover:text-[#EDE5DC]">
+            <i class="fa-solid fa-sparkles text-lg"></i> Custom
+          </button>
+        </div>
+
+        <!-- Full-Width Composer Textarea -->
+        <div class="rounded-2xl border border-[#38312C] bg-[#1E1917] p-4 shadow-xl space-y-3">
+          <textarea 
+            rows="5"
+            class="w-full bg-transparent text-sm leading-relaxed text-[#EDE5DC] placeholder:text-[#8E8377] focus:outline-hidden resize-none"
+            placeholder="Describe your scene or objective in natural language..."
+          >Cinematic FPV racing drone sequence flying through rainy neon Tokyo alleys under glowing lanterns with a 360 orbit around an artisan.</textarea>
+
+          <!-- Dropzone inside Composer -->
+          <div class="p-3 rounded-xl border border-dashed border-[#38312C] bg-[#151210] flex items-center justify-between text-xs text-[#8E8377]">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-paperclip text-[#DA7756]"></i>
+              <span>Drop references (image/video/text) to reverse-engineer</span>
+            </div>
+            <button class="px-2.5 py-1 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC]">Browse Files</button>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button onclick="setStage(2)" class="px-6 py-3 rounded-xl bg-[#DA7756] hover:bg-[#C15F3D] text-white font-bold text-xs shadow-lg flex items-center gap-2">
+            Continue to Clarification Matrix <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STAGE 2: ADAPTIVE QUESTION MATRIX -->
+      <div id="stage-2" class="hidden space-y-6 animate-in fade-in">
+        <div class="space-y-1 text-center">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono mb-1">
+            <i class="fa-solid fa-circle-check"></i> Intent Analyzed by Xiaomi-MiMo
+          </div>
+          <h2 class="text-xl font-bold text-[#FBF9F5]">Stage 2: Precision Disambiguation</h2>
+          <p class="text-xs text-[#8E8377]">Select options or let AI auto-decide to fine-tune your parameters.</p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Question 1 -->
+          <div class="p-5 rounded-2xl border border-[#38312C] bg-[#1E1917] space-y-3 shadow-lg">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-[#FBF9F5]">1. Camera Lens & Trajectory Dynamics</span>
+              <span class="text-xs text-[#8E8377] font-mono">Single Choice</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <button class="p-3 rounded-xl bg-[#DA7756] text-white font-bold text-left flex items-center justify-between">
+                <span>18mm FPV Wide Drone Dive</span>
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <button class="p-3 rounded-xl bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-left hover:border-[#DA7756]">
+                <span>50mm Smooth Dolly Follow</span>
+              </button>
+              <button class="p-3 rounded-xl bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-left hover:border-[#DA7756]">
+                <span>360° Orbital Telephoto Arc</span>
+              </button>
+              <button class="p-3 rounded-xl bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-left hover:border-[#DA7756]">
+                <span>Let AI Decide</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="p-5 rounded-2xl border border-[#38312C] bg-[#1E1917] space-y-3 shadow-lg">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-[#FBF9F5]">2. Atmosphere & Fluid Particles</span>
+              <span class="text-xs text-[#8E8377] font-mono">Multiple Choice</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <button class="p-3 rounded-xl bg-[#DA7756] text-white font-bold text-left flex items-center justify-between">
+                <span>Volumetric Neon Light Shafts</span>
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <button class="p-3 rounded-xl bg-[#DA7756] text-white font-bold text-left flex items-center justify-between">
+                <span>Rain Wet Asphalt Reflections</span>
+                <i class="fa-solid fa-check"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <button onclick="setStage(1)" class="px-5 py-2.5 rounded-xl bg-[#241F1C] border border-[#38312C] hover:text-white text-xs font-semibold text-[#8E8377]">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Back to Intent
+          </button>
+          <button onclick="setStage(3)" class="px-6 py-3 rounded-xl bg-[#DA7756] hover:bg-[#C15F3D] text-white font-bold text-xs shadow-lg flex items-center gap-2">
+            Synthesize Master Prompt <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STAGE 3: MASTER STUDIO & WORKBENCH -->
+      <div id="stage-3" class="space-y-5 animate-in fade-in">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-[#FBF9F5]">Stage 3: Synthesized Master Studio</h2>
+            <p class="text-xs text-[#8E8377]">Production-ready prompt compiled for Runway Gen-3 / Sora / Kling.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#DA7756] hover:bg-[#C15F3D] text-white text-xs font-bold flex items-center gap-1.5 shadow-md">
+              <i class="fa-regular fa-copy"></i> Copy Prompt
+            </button>
+            <button class="px-3 py-1.5 rounded-xl bg-[#241F1C] border border-[#38312C] text-[#EDE5DC] text-xs font-semibold">
+              <i class="fa-solid fa-download mr-1"></i> Export .md
+            </button>
+          </div>
+        </div>
+
+        <!-- Master Canvas Box -->
+        <div class="rounded-2xl border border-[#38312C] bg-[#1E1917] p-6 shadow-2xl space-y-4 font-mono text-xs leading-relaxed">
+          <div class="flex items-center justify-between border-b border-[#2B2520] pb-3 font-sans">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-[#DA7756]/15 text-[#DA7756] font-bold text-xs font-mono">VIDEO DOMAIN</span>
+              <span class="text-xs text-[#8E8377]">Compiled with 24fps cinematic shutter parameters</span>
+            </div>
+            <span class="text-xs text-[#8E8377] font-mono">~248 Tokens</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#141210] border border-[#2B2520] text-[#EDE5DC] space-y-2 select-text">
+            <p class="text-emerald-400 font-semibold leading-normal">
+              /video prompt: Ultra-photorealistic cinematic FPV drone sequence navigating through rain-drenched Neo-Tokyo alleyways at dusk.
+            </p>
+            <p class="text-[#B5A89B]">
+              The drone executes a rapid descending dive beneath neon paper lanterns, weaving between holographic shop signs before transitioning into a fluid 360-degree orbital rotation around a cybernetic craftsman assembling an incandescent glass lotus.
+            </p>
+            <div class="pt-2 text-[#DA7756] border-t border-[#241F1C]">
+              --ar 16:9 --motion 4 --fps 24 --camera fpv-drone-dive --lighting volumetric-cyan --render octane-cinema
+            </div>
+          </div>
+
+          <!-- Multi-turn Refine Bar -->
+          <div class="p-3 rounded-xl bg-[#241F1C] border border-[#38312C] flex items-center justify-between font-sans">
+            <span class="text-xs text-[#B5A89B]">Want to add more nuance or edge constraints?</span>
+            <button onclick="setStage(2)" class="px-3 py-1.5 rounded-lg bg-[#141210] hover:bg-[#2B2520] border border-[#38312C] text-xs font-bold text-[#DA7756]">
+              Keep Building Context <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom Command Status -->
+  <footer class="h-10 border-t border-[#2B2520] bg-[#161311] px-6 flex items-center justify-between text-[11px] font-mono text-[#8E8377] shrink-0">
+    <span>Stage 3 of 3 • State Hydrated in LocalStorage</span>
+    <div class="flex items-center gap-3">
+      <span>Xiaomi-MiMo v2.1 Connected</span>
+      <button onclick="setStage(1)" class="text-[#DA7756] hover:underline">Start New Prompt</button>
+    </div>
+  </footer>
+
+  <script>
+    function setStage(num) {
+      document.getElementById('stage-1').classList.add('hidden');
+      document.getElementById('stage-2').classList.add('hidden');
+      document.getElementById('stage-3').classList.add('hidden');
+      document.getElementById('stage-' + num).classList.remove('hidden');
+
+      for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById('step-btn-' + i);
+        if (i === num) {
+          btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#DA7756] text-white font-bold shadow-xs transition cursor-pointer";
+        } else {
+          btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] transition cursor-pointer";
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

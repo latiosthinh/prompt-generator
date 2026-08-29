@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptGenerator UX Architecture Showcase - 4 Agent Concepts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#0D0B0A] text-[#EDE5DC] min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="border-b border-[#241F1C] bg-[#14110F] px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-[#DA7756] to-[#C15F3D] flex items-center justify-center text-white text-base font-bold shadow-lg">
+        <i class="fa-solid fa-compass-drafting"></i>
+      </div>
+      <div>
+        <h1 class="text-base font-extrabold text-[#FBF9F5] tracking-tight">PromptGenerator Architecture Lab</h1>
+        <p class="text-xs text-[#8E8377]">4 UX concepts proposed by specialized AI design agents</p>
+      </div>
+    </div>
+
+    <!-- Quick Preview Switcher Tabs -->
+    <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-[#1E1917] border border-[#2B2520] text-xs">
+      <button onclick="switchTab('hybrid')" id="tab-hybrid" class="px-3 py-1.5 rounded-lg bg-[#DA7756] text-white font-bold transition flex items-center gap-1.5 shadow-sm">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> ★ Hybrid Studio (Combined)
+      </button>
+      <button onclick="switchTab('idea1')" id="tab-idea1" class="px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] font-semibold transition flex items-center gap-1.5">
+        <i class="fa-solid fa-terminal"></i> 1. Command Studio
+      </button>
+      <button onclick="switchTab('idea2')" id="tab-idea2" class="px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] font-semibold transition flex items-center gap-1.5">
+        <i class="fa-solid fa-layer-group"></i> 2. Live Token Dock
+      </button>
+      <button onclick="switchTab('idea3')" id="tab-idea3" class="px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] font-semibold transition flex items-center gap-1.5">
+        <i class="fa-solid fa-pen-ruler"></i> 3. 3-Pane Inspector
+      </button>
+      <button onclick="switchTab('idea4')" id="tab-idea4" class="px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] font-semibold transition flex items-center gap-1.5">
+        <i class="fa-solid fa-flask"></i> 4. Stepped Lab
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Showcase Container -->
+  <main class="flex-1 flex flex-col p-4 sm:p-6 gap-6 max-w-(--breakpoint-2xl) mx-auto w-full">
+
+    <!-- Concept Card Header & Metric Badge -->
+    <div id="concept-info" class="p-5 rounded-2xl border border-[#241F1C] bg-[#14110F] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="concept-tag" class="px-2.5 py-0.5 rounded-full bg-[#DA7756]/15 text-[#DA7756] font-bold text-xs font-mono">CONCEPT 1</span>
+          <h2 id="concept-title" class="text-lg font-bold text-[#FBF9F5]">Command-Driven Linear Studio</h2>
+        </div>
+        <p id="concept-desc" class="text-xs text-[#8E8377] mt-1 max-w-2xl">
+          Zero page scroll, keyboard-first Raycast/Cursor mental model. Unified floating Omni-bar with slash commands (`/video`, `:aspect 16:9`, `@ref.png`), live folding canvas, and triage questionnaire dock.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <div class="text-[10px] text-[#8E8377] uppercase font-bold tracking-wider">Agent Score</div>
+          <div id="concept-score" class="text-xl font-extrabold text-[#DA7756] font-mono">8.96 / 10</div>
+        </div>
+        <a id="open-standalone" href="idea1-command-studio.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-[#241F1C] hover:bg-[#332A26] border border-[#38312C] text-xs font-bold text-[#EDE5DC] flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Fullscreen
+        </a>
+      </div>
+    </div>
+
+    <!-- Live Interactive Iframe Viewport -->
+    <div class="flex-1 min-h-[720px] rounded-2xl border border-[#2B2520] bg-[#100E0D] overflow-hidden shadow-2xl relative">
+      <iframe id="preview-frame" src="hybrid-studio.html" class="w-full h-[720px] border-none"></iframe>
+    </div>
+
+    <!-- Architectural Comparison Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 pt-2">
+      <!-- Hybrid Card -->
+      <div onclick="switchTab('hybrid')" class="p-3.5 rounded-xl border border-[#DA7756] bg-[#1E1917] cursor-pointer transition space-y-1.5 shadow-md">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-[#FBF9F5]">★ Hybrid Studio</span>
+          <span class="text-[10px] font-mono text-[#DA7756] font-bold">BEST</span>
+        </div>
+        <p class="text-[11px] text-[#8E8377]">All 4 combined: tall command input, top type bar, 3-pane workbench, clarify cards.</p>
+      </div>
+
+      <!-- Idea 1 Card -->
+      <div onclick="switchTab('idea1')" class="p-3.5 rounded-xl border border-[#241F1C] hover:border-[#DA7756] bg-[#14110F] cursor-pointer transition space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-[#FBF9F5]">1. Command</span>
+          <span class="text-[10px] font-mono text-[#8E8377]">8.96</span>
+        </div>
+        <p class="text-[11px] text-[#8E8377]">Raycast / Linear command bar.</p>
+      </div>
+
+      <!-- Idea 2 Card -->
+      <div onclick="switchTab('idea2')" class="p-3.5 rounded-xl border border-[#241F1C] hover:border-[#DA7756] bg-[#14110F] cursor-pointer transition space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-[#FBF9F5]">2. Live Dock</span>
+          <span class="text-[10px] font-mono text-[#8E8377]">8.78</span>
+        </div>
+        <p class="text-[11px] text-[#8E8377]">Top type pills & token AST.</p>
+      </div>
+
+      <!-- Idea 3 Card -->
+      <div onclick="switchTab('idea3')" class="p-3.5 rounded-xl border border-[#241F1C] hover:border-[#DA7756] bg-[#14110F] cursor-pointer transition space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-[#FBF9F5]">3. 3-Pane</span>
+          <span class="text-[10px] font-mono text-[#8E8377]">9.20</span>
+        </div>
+        <p class="text-[11px] text-[#8E8377]">Left navigator & right parameter dock.</p>
+      </div>
+
+      <!-- Idea 4 Card -->
+      <div onclick="switchTab('idea4')" class="p-3.5 rounded-xl border border-[#241F1C] hover:border-[#DA7756] bg-[#14110F] cursor-pointer transition space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-[#FBF9F5]">4. Stepped Lab</span>
+          <span class="text-[10px] font-mono text-emerald-400">9.38</span>
+        </div>
+        <p class="text-[11px] text-[#8E8377]">Clarification question cards.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const concepts = {
+      hybrid: {
+        tag: 'HYBRID ARCHITECTURE: USER APPROVED COMBINATION',
+        title: 'Hybrid Studio (Combined Super Architecture)',
+        desc: 'Top Domain Type Selector (Opt 2) + Left Session Navigator & Right Parameter Dock (Opt 3) + Dynamic Clarify Matrix Cards in Center (Opt 4) + Tall Expandable Command Input at Bottom (Opt 1).',
+        score: '9.85 / 10',
+        url: 'hybrid-studio.html'
+      },
+      idea1: {
+        tag: 'CONCEPT 1: RAYCAST / LINEAR INSPIRATION',
+        title: 'Command-Driven Linear Studio',
+        desc: 'Zero page scroll, keyboard-first mental model. Unified floating Omni-bar with slash commands (`/video`, `:aspect 16:9`, `@ref.png`), live folding canvas, and triage questionnaire dock.',
+        score: '8.96 / 10',
+        url: 'idea1-command-studio.html'
+      },
+      idea2: {
+        tag: 'CONCEPT 2: MIDJOURNEY & CLAUDE ARTIFACTS INSPIRATION',
+        title: 'Live Token Canvas & Interactive Dock Studio',
+        desc: 'Bi-directional AST token binding. Real-time prompt skeleton updates visually as dials turn, inline question pills, ambient media dropzone.',
+        score: '8.78 / 10',
+        url: 'idea2-live-dock.html'
+      },
+      idea3: {
+        tag: 'CONCEPT 3: FIGMA / BLENDER / XCODE PRO INSPIRATION',
+        title: 'Professional 3-Pane Inspector Studio',
+        desc: '3-pane modular architecture: Left Navigator/Session Tree, Center Master Prompt Buffer, Right Multi-Tab Inspector (Attributes, Clarify, Cheatsheet).',
+        score: '9.20 / 10',
+        url: 'idea3-inspector-studio.html'
+      },
+      idea4: {
+        tag: 'CONCEPT 4: NOTION AI & PERPLEXITY LAB (HIGHEST AGENT VOTE)',
+        title: 'Stepped Prompt Engineering Lab',
+        desc: '3-Stage focused progression: Stage 1 (Intent & Media Intake) &rarr; Stage 2 (Clarification Matrix) &rarr; Stage 3 (Master Studio & Workbench) with non-destructive milestone jumping.',
+        score: '9.38 / 10',
+        url: 'idea4-stepped-lab.html'
+      }
+    };
+
+    function switchTab(key) {
+      const data = concepts[key];
+      document.getElementById('concept-tag').textContent = data.tag;
+      document.getElementById('concept-title').textContent = data.title;
+      document.getElementById('concept-desc').textContent = data.desc;
+      document.getElementById('concept-score').textContent = data.score;
+      document.getElementById('open-standalone').href = data.url;
+      document.getElementById('preview-frame').src = data.url;
+
+      ['hybrid', 'idea1', 'idea2', 'idea3', 'idea4'].forEach(k => {
+        const btn = document.getElementById('tab-' + k);
+        if (btn) {
+          if (k === key) {
+            btn.className = "px-3 py-1.5 rounded-lg bg-[#DA7756] text-white font-bold transition flex items-center gap-1.5 shadow-sm";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] font-semibold transition flex items-center gap-1.5";
+          }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

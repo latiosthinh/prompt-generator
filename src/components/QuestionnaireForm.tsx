@@ -38,17 +38,17 @@ export function QuestionnaireForm({
   return (
     <div className="w-full space-y-4">
       {/* Header & Quick Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-md border border-[#E6DFD3] bg-[#F5F0E6]/70 p-3.5 dark:border-[#38312C] dark:bg-[#1F1A18]/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[#38312C] bg-[#1E1917] p-3.5 shadow-sm">
         <div>
-          <h2 className="text-sm font-bold text-[#2B2520] dark:text-[#EDE5DC]">
+          <h2 className="text-sm font-bold text-[#FBF9F5]">
             {t.questionnaire.title}
           </h2>
           {analysis ? (
-            <p className="text-xs text-[#6B6258] dark:text-[#B5A89B] mt-0.5 max-w-xl">
+            <p className="text-xs text-[#8E8377] mt-0.5 max-w-xl">
               {analysis}
             </p>
           ) : (
-            <p className="text-xs text-[#6B6258] dark:text-[#B5A89B] mt-0.5">
+            <p className="text-xs text-[#8E8377] mt-0.5">
               {t.questionnaire.defaultSubtitle}
             </p>
           )}
@@ -59,9 +59,9 @@ export function QuestionnaireForm({
             type="button"
             onClick={onSetAllAiDecide}
             disabled={isSubmitting}
-            className="inline-flex items-center gap-1.5 rounded-md border border-[#E6DFD3] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#2B2520] hover:bg-[#F3EFE6] disabled:opacity-50 cursor-pointer dark:border-[#38312C] dark:bg-[#282320] dark:text-[#EDE5DC] dark:hover:bg-[#332A26]"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[#38312C] bg-[#241F1C] px-2.5 py-1 text-xs font-semibold text-[#EDE5DC] hover:border-[#DA7756] hover:text-[#DA7756] disabled:opacity-50 cursor-pointer transition"
           >
-            <Wand2 className="h-3 w-3 text-[#C15F3D] dark:text-[#DA7756]" />
+            <Wand2 className="h-3 w-3 text-[#DA7756]" />
             <span>{t.questionnaire.aiDecideAll}</span>
           </button>
 
@@ -69,7 +69,7 @@ export function QuestionnaireForm({
             type="button"
             onClick={onReset}
             disabled={isSubmitting}
-            className="inline-flex items-center gap-1.5 rounded-md border border-[#E6DFD3] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#2B2520] hover:bg-[#F3EFE6] disabled:opacity-50 cursor-pointer dark:border-[#38312C] dark:bg-[#282320] dark:text-[#EDE5DC] dark:hover:bg-[#332A26]"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[#38312C] bg-[#241F1C] px-2.5 py-1 text-xs font-semibold text-[#EDE5DC] hover:border-[#DA7756] disabled:opacity-50 cursor-pointer transition"
           >
             <RefreshCw className="h-3 w-3 text-[#8E8377]" />
             <span>{t.questionnaire.reset}</span>
@@ -93,8 +93,8 @@ export function QuestionnaireForm({
       </div>
 
       {/* Submission Footer */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#E6DFD3]/60 pt-4 dark:border-[#38312C]/60">
-        <div className="text-xs text-[#6B6258] dark:text-[#B5A89B]">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#2B2520] pt-3">
+        <div className="text-xs text-[#8E8377] font-mono">
           {t.questionnaire.answeredProgress
             .replace('{answered}', String(answeredCount))
             .replace('{total}', String(questions.length))}
@@ -104,7 +104,7 @@ export function QuestionnaireForm({
           type="button"
           onClick={onSubmit}
           disabled={isSubmitting}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-[#C15F3D] px-5 py-2.5 text-xs font-semibold text-white shadow-2xs transition hover:bg-[#A94E30] active:scale-98 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#DA7756] dark:hover:bg-[#C15F3D] cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#DA7756] to-[#C15F3D] px-5 py-2.5 text-xs font-bold text-white shadow-lg transition hover:opacity-95 active:scale-98 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           {isSubmitting ? (
             <>

@@ -45,11 +45,12 @@ function formatRelativeTime(timestamp: number, t: Translations, locale: Locale):
 
 function getDomainColor(domain: string): string {
   const d = domain.toLowerCase();
-  if (d.includes('hình ảnh') || d.includes('image')) return 'bg-pink-500/10 text-pink-700 dark:text-pink-400 border-pink-200 dark:border-pink-900/40';
-  if (d.includes('lập trình') || d.includes('code') || d.includes('tech')) return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40';
-  if (d.includes('viết') || d.includes('writing') || d.includes('copy')) return 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-900/40';
-  if (d.includes('agent') || d.includes('system')) return 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900/40';
-  return 'bg-[#C15F3D]/10 text-[#C15F3D] border-[#C15F3D]/20 dark:border-[#DA7756]/30 dark:text-[#DA7756]';
+  if (d.includes('hình ảnh') || d.includes('image')) return 'bg-pink-500/15 text-pink-400 border-pink-500/30';
+  if (d.includes('video')) return 'bg-purple-500/15 text-purple-400 border-purple-500/30';
+  if (d.includes('lập trình') || d.includes('code') || d.includes('tech')) return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
+  if (d.includes('viết') || d.includes('writing') || d.includes('copy')) return 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30';
+  if (d.includes('agent') || d.includes('system')) return 'bg-blue-500/15 text-blue-400 border-blue-500/30';
+  return 'bg-[#DA7756]/15 text-[#DA7756] border-[#DA7756]/30';
 }
 
 export function Sidebar({
@@ -93,23 +94,23 @@ export function Sidebar({
       {isOpen && (
         <div
           onClick={onToggle}
-          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-2xs md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-2xs md:hidden"
         />
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col border-r border-[#E6DFD3] bg-[#F5F0E6] transition-all duration-300 dark:border-[#38312C] dark:bg-[#1F1A18] ${
+        className={`fixed top-14 bottom-0 left-0 z-40 flex flex-col border-r border-[#2B2520] bg-[#14110F] transition-all duration-300 ${
           isOpen ? 'w-72 sm:w-76 translate-x-0' : '-translate-x-full md:w-0 md:translate-x-0 md:border-r-0 overflow-hidden'
         }`}
       >
         {/* Top bar: Brand & New Chat */}
-        <div className="flex items-center justify-between border-b border-[#E6DFD3] p-3.5 dark:border-[#38312C]">
+        <div className="flex items-center justify-between border-b border-[#2B2520] p-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-sm bg-[#C15F3D] text-white dark:bg-[#DA7756]">
-              <Sparkles className="h-3.5 w-3.5" />
+            <div className="flex h-5 w-5 items-center justify-center rounded bg-[#DA7756] text-white">
+              <Sparkles className="h-3 w-3" />
             </div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#2B2520] dark:text-[#EDE5DC]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FBF9F5]">
               {t.sidebar.title}
             </span>
           </div>
@@ -119,7 +120,7 @@ export function Sidebar({
               type="button"
               onClick={onNewSession}
               title={t.sidebar.newTooltip}
-              className="inline-flex items-center gap-1 rounded-sm bg-[#FFFFFF] px-2 py-1 text-xs font-medium text-[#2B2520] border border-[#E6DFD3] shadow-2xs hover:bg-[#EDE7DC] dark:bg-[#282320] dark:border-[#38312C] dark:text-[#EDE5DC] dark:hover:bg-[#332A26] cursor-pointer"
+              className="inline-flex items-center gap-1 rounded bg-[#1E1917] px-2.5 py-1 text-xs font-semibold text-[#EDE5DC] border border-[#38312C] hover:border-[#DA7756] hover:text-[#DA7756] transition cursor-pointer"
             >
               <Plus className="h-3 w-3" />
               <span>{t.sidebar.newButton}</span>
@@ -127,7 +128,7 @@ export function Sidebar({
             <button
               type="button"
               onClick={onToggle}
-              className="rounded-sm p-1 text-[#8E8377] hover:bg-[#E6DFD3] hover:text-[#2B2520] dark:hover:bg-[#282320] dark:hover:text-white md:hidden cursor-pointer"
+              className="rounded p-1 text-[#8E8377] hover:bg-[#1E1917] hover:text-[#EDE5DC] md:hidden cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -135,7 +136,7 @@ export function Sidebar({
         </div>
 
         {/* Search & Domain Filter Bar */}
-        <div className="space-y-2 border-b border-[#E6DFD3] p-2.5 dark:border-[#38312C]">
+        <div className="space-y-2 border-b border-[#2B2520] p-2.5">
           <div className="relative">
             <Search className="absolute top-2 left-2.5 h-3.5 w-3.5 text-[#8E8377]" />
             <input
@@ -143,7 +144,7 @@ export function Sidebar({
               placeholder={t.sidebar.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-sm border border-[#E6DFD3] bg-[#FFFFFF] py-1 pr-2.5 pl-7.5 text-xs text-[#2B2520] outline-hidden placeholder:text-[#8E8377] focus:border-[#C15F3D] dark:border-[#38312C] dark:bg-[#282320] dark:text-[#EDE5DC]"
+              className="w-full rounded-md border border-[#38312C] bg-[#1E1917] py-1 pr-2.5 pl-7.5 text-xs text-[#EDE5DC] outline-hidden placeholder:text-[#8E8377] focus:border-[#DA7756]"
             />
           </div>
 
@@ -152,10 +153,10 @@ export function Sidebar({
               <button
                 type="button"
                 onClick={() => setSelectedDomainFilter(null)}
-                className={`shrink-0 rounded-xs px-2 py-0.5 font-medium transition cursor-pointer ${
+                className={`shrink-0 rounded px-2 py-0.5 font-medium transition cursor-pointer ${
                   selectedDomainFilter === null
-                    ? 'bg-[#2B2520] text-white dark:bg-[#EDE5DC] dark:text-[#2B2520]'
-                    : 'bg-[#EDE7DC] text-[#6B6258] hover:bg-[#E2DACB] dark:bg-[#282320] dark:text-[#B5A89B]'
+                    ? 'bg-[#DA7756] text-white font-bold'
+                    : 'bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC]'
                 }`}
               >
                 {t.sidebar.filterAll}
@@ -165,10 +166,10 @@ export function Sidebar({
                   key={d}
                   type="button"
                   onClick={() => setSelectedDomainFilter(selectedDomainFilter === d ? null : d)}
-                  className={`shrink-0 rounded-xs px-2 py-0.5 font-medium transition cursor-pointer ${
+                  className={`shrink-0 rounded px-2 py-0.5 font-medium transition cursor-pointer ${
                     selectedDomainFilter === d
-                      ? 'bg-[#2B2520] text-white dark:bg-[#EDE5DC] dark:text-[#2B2520]'
-                      : 'bg-[#EDE7DC] text-[#6B6258] hover:bg-[#E2DACB] dark:bg-[#282320] dark:text-[#B5A89B]'
+                      ? 'bg-[#DA7756] text-white font-bold'
+                      : 'bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC]'
                   }`}
                 >
                   {d}
@@ -181,7 +182,7 @@ export function Sidebar({
         {/* Sessions list */}
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {filteredSessions.length === 0 ? (
-            <div className="py-12 text-center text-xs text-[#8E8377] dark:text-[#7E7368]">
+            <div className="py-12 text-center text-xs text-[#8E8377]">
               <MessageSquare className="mx-auto mb-2 h-5 w-5 opacity-40" />
               {searchQuery || selectedDomainFilter ? t.sidebar.emptySearch : t.sidebar.emptyHistory}
             </div>
@@ -194,18 +195,18 @@ export function Sidebar({
                 <div
                   key={session.id}
                   onClick={() => onSelectSession(session.id)}
-                  className={`group relative flex flex-col gap-1 rounded-sm border p-2.5 text-left transition cursor-pointer ${
+                  className={`group relative flex flex-col gap-1 rounded-lg border p-2.5 text-left transition cursor-pointer ${
                     isActive
-                      ? 'border-[#C15F3D] bg-[#F9EFE9] dark:border-[#DA7756] dark:bg-[#33231D]'
-                      : 'border-transparent hover:border-[#E6DFD3] hover:bg-[#EDE7DC]/70 dark:hover:border-[#38312C] dark:hover:bg-[#282320]'
+                      ? 'border-[#DA7756]/50 bg-[#1E1917] shadow-xs'
+                      : 'border-transparent hover:border-[#38312C] hover:bg-[#1A1614]'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <h4
                       className={`text-xs font-semibold line-clamp-1 ${
                         isActive
-                          ? 'text-[#C15F3D] dark:text-[#DA7756]'
-                          : 'text-[#2B2520] dark:text-[#EDE5DC]'
+                          ? 'text-[#DA7756]'
+                          : 'text-[#EDE5DC]'
                       }`}
                     >
                       {session.title || session.seed}
@@ -217,24 +218,24 @@ export function Sidebar({
                         e.stopPropagation();
                         onDeleteSession(session.id);
                       }}
-                      className="opacity-0 group-hover:opacity-100 rounded-xs p-0.5 text-[#8E8377] hover:text-red-600 transition"
+                      className="opacity-0 group-hover:opacity-100 rounded p-0.5 text-[#8E8377] hover:text-red-400 transition cursor-pointer"
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
                   </div>
 
-                  <p className="text-[11px] text-[#6B6258] dark:text-[#B5A89B] line-clamp-2 leading-relaxed">
+                  <p className="text-[11px] text-[#8E8377] line-clamp-2 leading-relaxed font-mono">
                     {session.seed}
                   </p>
 
-                  <div className="flex items-center justify-between pt-1 text-[10px] text-[#8E8377] dark:text-[#7E7368]">
-                    <span className={`inline-flex items-center rounded-xs border px-1 py-0.2 font-medium ${getDomainColor(session.domain)}`}>
+                  <div className="flex items-center justify-between pt-1 text-[10px] text-[#8E8377]">
+                    <span className={`inline-flex items-center rounded-sm border px-1 py-0.2 font-medium font-mono ${getDomainColor(session.domain)}`}>
                       {session.domain}
                     </span>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 font-mono">
                       {roundCount > 1 && (
-                        <span className="flex items-center gap-0.5 text-[#C15F3D] dark:text-[#DA7756]">
+                        <span className="flex items-center gap-0.5 text-[#DA7756]">
                           <Layers className="h-2.5 w-2.5" />
                           <span>{t.sidebar.roundPrefix}{roundCount}</span>
                         </span>
@@ -250,11 +251,11 @@ export function Sidebar({
 
         {/* Footer: Clear All */}
         {sessions.length > 0 && (
-          <div className="border-t border-[#E6DFD3] p-2.5 dark:border-[#38312C]">
+          <div className="border-t border-[#2B2520] p-2.5">
             <button
               type="button"
               onClick={onClearAll}
-              className="w-full flex items-center justify-center gap-1.5 rounded-sm border border-[#E6DFD3] bg-[#FFFFFF] px-2.5 py-1 text-xs text-[#6B6258] hover:bg-red-50 hover:text-red-700 hover:border-red-200 dark:border-[#38312C] dark:bg-[#282320] dark:text-[#B5A89B] dark:hover:bg-red-950/40 dark:hover:text-red-400 transition cursor-pointer"
+              className="w-full flex items-center justify-center gap-1.5 rounded-md border border-[#38312C] bg-[#1E1917] px-2.5 py-1 text-xs text-[#8E8377] hover:bg-red-950/40 hover:text-red-400 hover:border-red-900/50 transition cursor-pointer"
             >
               <Trash2 className="h-3 w-3" />
               <span>{t.sidebar.clearAll}</span>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea 3: Professional 3-Pane Inspector Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#13110F] text-[#EDE5DC] h-screen flex flex-col overflow-hidden">
+
+  <!-- Xcode/Blender Style Top Titlebar -->
+  <header class="h-11 border-b border-[#2B2520] bg-[#191614] px-4 flex items-center justify-between shrink-0 select-none">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 mr-2">
+        <span class="h-3 w-3 rounded-full bg-red-500/80 inline-block"></span>
+        <span class="h-3 w-3 rounded-full bg-yellow-500/80 inline-block"></span>
+        <span class="h-3 w-3 rounded-full bg-green-500/80 inline-block"></span>
+      </div>
+      <span class="font-bold text-xs text-[#FBF9F5] tracking-wide">PROMPT-STUDIO PRO</span>
+      <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#241F1C] text-[#DA7756] border border-[#38312C]">v2.4-RELEASE</span>
+    </div>
+
+    <!-- Center Mode Switcher -->
+    <div class="flex items-center rounded bg-[#13110F] p-0.5 border border-[#2B2520] text-xs">
+      <button class="px-3 py-1 rounded bg-[#241F1C] text-[#EDE5DC] font-semibold flex items-center gap-1.5"><i class="fa-solid fa-pen-ruler text-[11px] text-[#DA7756]"></i> Workbench</button>
+      <button class="px-3 py-1 rounded text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5"><i class="fa-solid fa-code-compare text-[11px]"></i> Diff Visualizer</button>
+      <button class="px-3 py-1 rounded text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5"><i class="fa-solid fa-chart-pie text-[11px]"></i> Token Metrics</button>
+    </div>
+
+    <div class="flex items-center gap-3 text-xs">
+      <button class="px-2.5 py-1 rounded bg-[#DA7756] text-white font-semibold hover:bg-[#C15F3D]"><i class="fa-regular fa-copy mr-1"></i>Copy Master</button>
+      <a href="index.html" class="text-[#8E8377] hover:text-white"><i class="fa-solid fa-grip mr-1"></i>All Ideas</a>
+    </div>
+  </header>
+
+  <!-- 3-Pane Modular Workspace Layout -->
+  <div class="flex-1 flex min-h-0 overflow-hidden">
+    
+    <!-- Left Pane: Navigator / Session Tree (250px) -->
+    <aside class="w-64 border-r border-[#2B2520] bg-[#161311] flex flex-col justify-between shrink-0">
+      <div class="p-3 space-y-3">
+        <div class="flex items-center justify-between text-[11px] font-bold text-[#8E8377] uppercase tracking-wider">
+          <span>Navigator</span>
+          <i class="fa-solid fa-plus cursor-pointer hover:text-[#DA7756]"></i>
+        </div>
+
+        <!-- Session Tree -->
+        <div class="space-y-1 text-xs">
+          <div class="p-2 rounded bg-[#241F1C] border border-[#DA7756]/40 text-[#EDE5DC] font-medium">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-film text-[#DA7756]"></i>
+              <span class="truncate">Cinematic FPV Drone</span>
+            </div>
+            <div class="flex items-center gap-2 mt-1.5 text-[10px] text-[#8E8377] font-mono pl-5">
+              <span>● Round 2</span>
+              <span>16:9 • 24fps</span>
+            </div>
+          </div>
+
+          <div class="p-2 rounded hover:bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC] transition cursor-pointer">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-code"></i>
+              <span class="truncate">Fastify Rate Limiter</span>
+            </div>
+          </div>
+
+          <div class="p-2 rounded hover:bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC] transition cursor-pointer">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-robot"></i>
+              <span class="truncate">Financial Analyst Agent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 border-t border-[#2B2520] text-xs text-[#8E8377] flex items-center justify-between">
+        <span>3 active sessions</span>
+        <button class="hover:text-red-400"><i class="fa-regular fa-trash-can"></i></button>
+      </div>
+    </aside>
+
+    <!-- Center Pane: Master Prompt Editor / Workbench (Flex-1) -->
+    <main class="flex-1 flex flex-col bg-[#1A1715] overflow-hidden">
+      <!-- Editor Header -->
+      <div class="h-9 border-b border-[#2B2520] px-4 flex items-center justify-between bg-[#191614] shrink-0 text-xs font-mono">
+        <div class="flex items-center gap-2 text-[#8E8377]">
+          <span>WORKSPACE &gt; VIDEO_GENERATION &gt; MASTER.MD</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[#DA7756]">● Live Auto-Sync</span>
+        </div>
+      </div>
+
+      <!-- Editor Content -->
+      <div class="flex-1 p-6 overflow-y-auto font-mono text-xs leading-relaxed space-y-4">
+        <!-- Markdown Editor Buffer -->
+        <div class="rounded-lg border border-[#38312C] bg-[#141210] p-4 text-[#EDE5DC] space-y-3">
+          <div class="text-[#DA7756] font-bold">### MASTER PROMPT SPECIFICATION (VIDEO GENERATION)</div>
+          
+          <p class="text-[#B5A89B]"><strong class="text-white">Persona & Engine:</strong> Runway Gen-3 Alpha Cinema Mode (24fps 4K Master)</p>
+          
+          <div class="p-3 rounded bg-[#1C1816] border border-[#2B2520] text-emerald-400">
+            A continuous cinematic FPV drone sequence through rainy neon-drenched Tokyo alleys. The drone executes a high-speed descending dive under glowing holographic signs, weaving past paper lanterns, before settling into a fluid 360-degree orbit around an artisan crafting a crystal lotus with cyan laser tools.
+          </div>
+
+          <div class="space-y-1 text-[#B5A89B]">
+            <div>- <strong>Camera Dynamics:</strong> FPV Racing Drone, 18mm Wide Lens, f/1.8 Shallow Depth, 180° Shutter Angle.</div>
+            <div>- <strong>Lighting & Particles:</strong> Volumetric cyan/magenta fog, rain reflections on asphalt, floating sparks.</div>
+            <div>- <strong>Parameters:</strong> <span class="text-[#DA7756]">--ar 16:9 --motion 4 --fps 24 --camera fpv-dive --chaos 5</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Status Strip -->
+      <div class="h-8 border-t border-[#2B2520] px-4 bg-[#191614] flex items-center justify-between text-[11px] font-mono text-[#8E8377] shrink-0">
+        <span>Ln 24, Col 12 • UTF-8 • Markdown</span>
+        <div class="flex items-center gap-3">
+          <span>Words: 154</span>
+          <span>Tokens: ~260</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Pane: Multi-Tab Context Inspector (340px) -->
+    <aside class="w-80 border-l border-[#2B2520] bg-[#161311] flex flex-col shrink-0">
+      <!-- Inspector Tabs -->
+      <div class="h-9 border-b border-[#2B2520] flex items-center bg-[#191614] text-xs font-semibold shrink-0">
+        <button class="flex-1 h-full border-b-2 border-[#DA7756] text-[#EDE5DC] flex items-center justify-center gap-1.5"><i class="fa-solid fa-sliders text-[11px]"></i> Attributes</button>
+        <button class="flex-1 h-full text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-center gap-1.5"><i class="fa-solid fa-circle-question text-[11px]"></i> Clarify (2)</button>
+        <button class="flex-1 h-full text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-center gap-1.5"><i class="fa-solid fa-book-open text-[11px]"></i> Cheats</button>
+      </div>
+
+      <div class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
+        <!-- Attributes Section -->
+        <div class="space-y-3">
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Aspect Ratio</label>
+            <div class="grid grid-cols-3 gap-1">
+              <button class="p-1.5 rounded bg-[#DA7756] text-white font-bold text-center">16:9</button>
+              <button class="p-1.5 rounded bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-center">9:16</button>
+              <button class="p-1.5 rounded bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-center">2.39:1</button>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Resolution</label>
+            <div class="grid grid-cols-3 gap-1">
+              <button class="p-1.5 rounded bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-center">HD</button>
+              <button class="p-1.5 rounded bg-[#DA7756] text-white font-bold text-center">FullHD</button>
+              <button class="p-1.5 rounded bg-[#241F1C] border border-[#38312C] text-[#B5A89B] text-center">4K</button>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Camera Preset</label>
+            <select class="w-full p-2 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC] focus:outline-hidden">
+              <option>FPV Racing Drone Dive</option>
+              <option>360° Orbit Arc</option>
+              <option>Dolly Vertigo Zoom</option>
+              <option>Static 35mm Master</option>
+            </select>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-[#8E8377] uppercase">Negative Exclusions</label>
+            <input type="text" value="blur, stutter, oversaturated, morphing" class="w-full p-2 rounded bg-[#241F1C] border border-[#38312C] text-[#EDE5DC] text-xs font-mono">
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-[#2B2520]">
+          <button class="w-full py-2 rounded-lg bg-[#241F1C] hover:bg-[#DA7756] border border-[#38312C] text-xs font-bold text-[#EDE5DC] hover:text-white transition">
+            Apply Attributes to Buffer
+          </button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+</body>
+</html>

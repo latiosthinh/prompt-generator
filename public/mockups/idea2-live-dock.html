@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea 2: Live Token Canvas & Interactive Dock Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#100E0D] text-[#EDE5DC] h-screen flex flex-col overflow-hidden">
+
+  <!-- Top Navigation & Domain Segmented Bar -->
+  <header class="h-14 border-b border-[#2B2520] bg-[#161311]/90 backdrop-blur-md px-6 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="h-7 w-7 rounded-lg bg-gradient-to-br from-[#DA7756] to-[#C15F3D] flex items-center justify-center text-white text-xs font-bold shadow-md">
+        <i class="fa-solid fa-layer-group"></i>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-[#FBF9F5]">PromptGenerator <span class="text-xs text-[#DA7756] font-mono ml-1">LIVE-DOCK</span></h1>
+      </div>
+    </div>
+
+    <!-- Centered Domain Segment Tabs -->
+    <div class="flex items-center p-1 rounded-xl bg-[#1E1917] border border-[#38312C] gap-1 text-xs">
+      <button class="px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5"><i class="fa-solid fa-image"></i> Image</button>
+      <button class="px-3 py-1 rounded-lg bg-[#DA7756] text-white font-bold flex items-center gap-1.5 shadow-sm"><i class="fa-solid fa-film"></i> Video</button>
+      <button class="px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5"><i class="fa-solid fa-code"></i> Code</button>
+      <button class="px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5"><i class="fa-solid fa-pen-nib"></i> Writing</button>
+      <button class="px-3 py-1 rounded-lg text-[#8E8377] hover:text-[#EDE5DC] flex items-center gap-1.5"><i class="fa-solid fa-robot"></i> Agent</button>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20"><i class="fa-solid fa-circle text-[8px] mr-1"></i>AST Live Sync</span>
+      <a href="index.html" class="px-3 py-1 rounded-lg bg-[#241F1C] border border-[#38312C] text-xs font-semibold text-[#EDE5DC] hover:border-[#DA7756]">All Ideas</a>
+    </div>
+  </header>
+
+  <!-- 3-Column Studio Body -->
+  <div class="flex-1 flex min-h-0 overflow-hidden relative">
+
+    <!-- Left: History & Quick Presets (240px) -->
+    <aside class="w-64 border-r border-[#2B2520] bg-[#141210] p-4 flex flex-col justify-between shrink-0">
+      <div class="space-y-4">
+        <button class="w-full py-2 rounded-lg bg-[#241F1C] hover:bg-[#2F2824] border border-[#38312C] text-xs font-bold text-[#EDE5DC] flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-plus text-[#DA7756]"></i> New Studio Session
+        </button>
+
+        <div class="space-y-2">
+          <span class="text-[10px] font-bold text-[#8E8377] uppercase tracking-wider">Video Presets</span>
+          <div class="space-y-1 text-xs">
+            <button class="w-full text-left p-2 rounded bg-[#1E1917] border border-[#DA7756]/40 text-[#EDE5DC] font-medium flex items-center justify-between">
+              <span>Cyberpunk Drone</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-[#DA7756]"></i>
+            </button>
+            <button class="w-full text-left p-2 rounded hover:bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-between">
+              <span>Macro Water 60fps</span>
+            </button>
+            <button class="w-full text-left p-2 rounded hover:bg-[#1E1917] text-[#8E8377] hover:text-[#EDE5DC] flex items-center justify-between">
+              <span>Anime Action Orbit</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-[#191614] border border-[#2B2520] text-[11px] text-[#8E8377]">
+        <div class="font-bold text-[#EDE5DC] mb-1">Xiaomi-MiMo Engine</div>
+        <div>Model: mimo-v2-turbo (Vision enabled)</div>
+      </div>
+    </aside>
+
+    <!-- Center: Interactive Live AST Token Skeleton (Flex-1) -->
+    <main class="flex-1 p-6 overflow-y-auto flex flex-col items-center bg-[#171412]">
+      <div class="w-full max-w-3xl space-y-4">
+        
+        <!-- Live AST Token Skeleton Canvas -->
+        <div class="rounded-2xl border border-[#38312C] bg-[#1E1917] p-5 shadow-2xl space-y-4">
+          <div class="flex items-center justify-between border-b border-[#2B2520] pb-3">
+            <div class="flex items-center gap-2">
+              <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-xs font-bold text-[#FBF9F5] tracking-wider uppercase font-mono">LIVE PROMPT SKELETON AST</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-2.5 py-1 rounded bg-[#241F1C] hover:bg-[#332A26] border border-[#38312C] text-xs text-[#EDE5DC] font-semibold"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            </div>
+          </div>
+
+          <!-- Token Node Tree -->
+          <div class="space-y-3 font-mono text-xs leading-relaxed">
+            <!-- Subject Node -->
+            <div class="p-3 rounded-xl bg-[#241F1C] border border-[#38312C] flex items-start gap-3">
+              <span class="px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 font-bold text-[10px] shrink-0 uppercase">Subject</span>
+              <p class="text-[#EDE5DC]">A cybernetic artisan sculpting an incandescent glass lotus in a rain-slicked Tokyo alleyway.</p>
+            </div>
+
+            <!-- Trajectory & Camera Node -->
+            <div class="p-3 rounded-xl bg-[#241F1C] border border-[#38312C] flex items-start gap-3">
+              <span class="px-2 py-0.5 rounded bg-purple-500/15 text-purple-400 font-bold text-[10px] shrink-0 uppercase">Trajectory</span>
+              <p class="text-[#EDE5DC]">Dynamic FPV drone dive starting from high rooflines, swooping under neon lanterns, executing 360° close orbit.</p>
+            </div>
+
+            <!-- Dynamic Interactive Attribute Badges -->
+            <div class="flex flex-wrap gap-2 pt-1">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#DA7756]/15 border border-[#DA7756]/40 text-[#DA7756] font-semibold text-xs">
+                <i class="fa-solid fa-expand text-[10px]"></i> Ratio: 16:9
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#DA7756]/15 border border-[#DA7756]/40 text-[#DA7756] font-semibold text-xs">
+                <i class="fa-solid fa-gauge-high text-[10px]"></i> Motion: Dynamic
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#DA7756]/15 border border-[#DA7756]/40 text-[#DA7756] font-semibold text-xs">
+                <i class="fa-solid fa-film text-[10px]"></i> 24fps Cinematic
+              </span>
+              <!-- Unfilled Token Slot -->
+              <button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-[#8E8377] hover:border-[#DA7756] text-[#8E8377] hover:text-[#DA7756] text-xs transition">
+                <i class="fa-solid fa-plus text-[10px]"></i> Add Lighting Tag
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inline Media Dropzone & Seed Bar -->
+        <div class="p-4 rounded-2xl border-2 border-dashed border-[#38312C] bg-[#141210]/60 flex items-center justify-between text-xs hover:border-[#DA7756]/50 transition cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-[#241F1C] flex items-center justify-center text-[#DA7756]">
+              <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+            </div>
+            <div>
+              <div class="font-bold text-[#EDE5DC]">Drag & drop video/image references here</div>
+              <div class="text-[11px] text-[#8E8377]">Xiaomi-MiMo Vision will reverse-engineer camera angles & lighting into tokens</div>
+            </div>
+          </div>
+          <button class="px-3 py-1.5 rounded-lg bg-[#241F1C] border border-[#38312C] text-[#EDE5DC] font-semibold hover:border-[#DA7756]">Browse</button>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Right: Parameter Control Dock & Dynamic Clarifier (320px) -->
+    <aside class="w-80 border-l border-[#2B2520] bg-[#141210] p-5 flex flex-col justify-between shrink-0 space-y-4 overflow-y-auto">
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-[#EDE5DC] uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-sliders text-[#DA7756]"></i> Live Parameter Dock
+          </span>
+        </div>
+
+        <!-- Aspect Ratio Tag Matrix -->
+        <div class="space-y-1.5">
+          <label class="text-[11px] font-semibold text-[#8E8377]">Aspect Ratio</label>
+          <div class="grid grid-cols-3 gap-1 text-xs">
+            <button class="py-1 rounded bg-[#DA7756] text-white font-bold text-center">16:9</button>
+            <button class="py-1 rounded bg-[#1E1917] border border-[#38312C] hover:border-[#DA7756] text-[#B5A89B] text-center">9:16</button>
+            <button class="py-1 rounded bg-[#1E1917] border border-[#38312C] hover:border-[#DA7756] text-[#B5A89B] text-center">2.39:1</button>
+          </div>
+        </div>
+
+        <!-- Motion Dynamics Slider -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[11px]">
+            <span class="font-semibold text-[#8E8377]">Motion Intensity</span>
+            <span class="text-[#DA7756] font-bold">Dynamic (Level 4)</span>
+          </div>
+          <input type="range" min="1" max="5" value="4" class="w-full accent-[#DA7756] bg-[#241F1C] h-1.5 rounded-lg cursor-pointer">
+        </div>
+
+        <!-- Dynamic Questions Stack -->
+        <div class="p-3.5 rounded-xl bg-[#1E1917] border border-[#38312C] space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[#EDE5DC]"><i class="fa-solid fa-circle-question text-[#DA7756] mr-1"></i>Clarification Gap</span>
+            <span class="text-[10px] text-[#DA7756] font-mono">1 of 2</span>
+          </div>
+          <p class="text-xs text-[#B5A89B]">Choose atmospheric particle effect:</p>
+          <div class="space-y-1">
+            <button class="w-full text-left p-2 rounded bg-[#241F1C] hover:border-[#DA7756] border border-transparent text-xs text-[#EDE5DC] font-medium flex items-center justify-between">
+              <span>Rain mist & neon reflections</span>
+              <i class="fa-solid fa-check text-emerald-400 text-xs"></i>
+            </button>
+            <button class="w-full text-left p-2 rounded bg-[#141210] hover:border-[#DA7756] border border-[#2B2520] text-xs text-[#8E8377] hover:text-[#EDE5DC]">
+              <span>Floating embers & ash</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Dock Action -->
+      <button class="w-full py-3 rounded-xl bg-gradient-to-r from-[#DA7756] to-[#C15F3D] hover:opacity-95 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-2">
+        <i class="fa-solid fa-sparkles"></i> Re-Synthesize Master Prompt
+      </button>
+    </aside>
+
+  </div>
+
+</body>
+</html>

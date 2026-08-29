@@ -54,7 +54,7 @@ export const vi = {
     deconstructPrompt: 'Phân tích & Tách Prompt từ tệp',
     deconstructing: 'Đang trích xuất ý tưởng prompt...',
     maxFilesExceeded: 'Tối đa đính kèm 5 tệp.',
-    fileTooLarge: 'Tệp {name} vượt quá giới hạn 2MB.',
+    fileTooLarge: 'Tệp {name} vượt quá giới hạn 100MB.',
   },
   pinnedAttributes: {
     title: 'Ghim thuộc tính nhanh',

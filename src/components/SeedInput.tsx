@@ -46,7 +46,7 @@ export function SeedInput({
   const charCount = seed.length;
   const maxRecommended = 2000;
   const maxFiles = 5;
-  const maxSizeBytes = 2 * 1024 * 1024; // 2MB
+  const maxSizeBytes = 100 * 1024 * 1024; // 100MB limit
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -269,7 +269,7 @@ export function SeedInput({
               type="file"
               ref={fileInputRef}
               multiple
-              accept="image/png,image/jpeg,image/webp,.txt,.md,.json"
+              accept="image/*,video/*,.txt,.md,.json,.pdf,.doc,.docx,.yaml,.yml,.csv"
               onChange={(e) => {
                 if (e.target.files) {
                   processFiles(e.target.files);

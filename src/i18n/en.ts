@@ -54,7 +54,7 @@ export const en = {
     deconstructPrompt: 'Break Prompt from Files',
     deconstructing: 'Extracting Prompt Concepts...',
     maxFilesExceeded: 'Maximum 5 files allowed.',
-    fileTooLarge: 'File {name} exceeds 2MB limit.',
+    fileTooLarge: 'File {name} exceeds 100MB limit.',
   },
   pinnedAttributes: {
     title: 'Quick Attribute Pins',

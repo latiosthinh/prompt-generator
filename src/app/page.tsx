@@ -6,6 +6,7 @@ import { SeedInput } from '@/components/SeedInput';
 import { PinnedAttributesSelector } from '@/components/PinnedAttributesSelector';
 import { QuestionnaireForm } from '@/components/QuestionnaireForm';
 import { PromptViewer } from '@/components/PromptViewer';
+import { DomainCheatsheet } from '@/components/DomainCheatsheet';
 import { Sidebar } from '@/components/Sidebar';
 import { getDomains } from '@/config/domains';
 import {
@@ -19,7 +20,15 @@ import {
   DeconstructMediaResponse,
 } from '@/types/schemas';
 import { sessionStore, useSessions } from '@/lib/storage';
-import { Sparkles, AlertCircle, PanelLeftClose, PanelLeftOpen, Globe, CheckCircle2, HelpCircle } from 'lucide-react';
+import {
+  Sparkles,
+  AlertCircle,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Globe,
+  PlusCircle,
+  FileCode2,
+} from 'lucide-react';
 import { getDictionary, Locale, defaultLocale } from '@/i18n';
 
 export default function Home() {
@@ -390,7 +399,7 @@ export default function Home() {
       >
         {/* Top Navbar */}
         <header className="sticky top-0 z-30 border-b border-[#E6DFD3]/80 bg-[#FBF9F5]/90 backdrop-blur-md dark:border-[#38312C]/80 dark:bg-[#191614]/90">
-          <div className="mx-auto flex w-full max-w-(--breakpoint-2xl) items-center justify-between px-4 py-3 sm:px-8">
+          <div className="mx-auto flex w-full max-w-(--breakpoint-2xl) items-center justify-between px-4 py-2.5 sm:px-8">
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -405,65 +414,45 @@ export default function Home() {
                 )}
               </button>
 
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#C15F3D] text-white shadow-xs dark:bg-[#DA7756]">
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div>
-                  <h1 className="text-sm font-semibold tracking-tight text-[#2B2520] dark:text-[#EDE5DC]">{t.app.title}</h1>
+                  <h1 className="text-sm font-bold tracking-tight text-[#2B2520] dark:text-[#EDE5DC]">{t.app.title}</h1>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Language Switcher Button */}
+            <div className="flex items-center gap-2.5">
+              {/* Quick Reset / New Prompt */}
+              <button
+                type="button"
+                onClick={handleResetAll}
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-[#E6DFD3] bg-[#FFFFFF] px-2.5 py-1 text-xs font-semibold text-[#6B6258] shadow-2xs hover:border-[#C15F3D]/50 hover:bg-[#FDF6F0] hover:text-[#C15F3D] dark:border-[#38312C] dark:bg-[#282320] dark:text-[#B5A89B] dark:hover:border-[#DA7756]/50 dark:hover:bg-[#33231D] dark:hover:text-[#DA7756] cursor-pointer transition"
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span>{locale === 'vi' ? 'Tạo mới' : 'New Prompt'}</span>
+              </button>
+
+              {/* Language Switcher */}
               <button
                 type="button"
                 onClick={toggleLocale}
-                className="inline-flex items-center gap-1.5 rounded-md border border-[#E6DFD3] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#6B6258] shadow-2xs hover:bg-[#F3EFE6] hover:text-[#2B2520] dark:border-[#38312C] dark:bg-[#282320] dark:text-[#B5A89B] dark:hover:bg-[#2E2723] dark:hover:text-white cursor-pointer transition"
+                className="inline-flex items-center gap-1.5 rounded-md border border-[#E6DFD3] bg-[#FFFFFF] px-2.5 py-1 text-xs font-semibold text-[#6B6258] shadow-2xs hover:bg-[#F3EFE6] hover:text-[#2B2520] dark:border-[#38312C] dark:bg-[#282320] dark:text-[#B5A89B] dark:hover:bg-[#2E2723] dark:hover:text-white cursor-pointer transition"
               >
                 <Globe className="h-3.5 w-3.5 text-[#C15F3D] dark:text-[#DA7756]" />
-                <span className="uppercase font-semibold">{locale}</span>
+                <span className="uppercase font-bold">{locale}</span>
               </button>
             </div>
           </div>
         </header>
 
-        {/* Main Container: Wide full workspace */}
-        <main className="mx-auto w-full max-w-(--breakpoint-2xl) px-4 py-5 sm:px-8 flex-1 flex flex-col">
-          {/* Header Title with Step Progression indicator */}
-          <section className="mb-5 flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#E6DFD3]/60 pb-4 dark:border-[#38312C]/60">
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-[#2B2520] dark:text-[#EDE5DC]">
-                {t.app.heading}
-              </h2>
-              <p className="text-xs text-[#6B6258] dark:text-[#B5A89B] mt-0.5">
-                {t.app.subheading}
-              </p>
-            </div>
-
-            {/* Workflow status indicator placed logically above workspace */}
-            <div className="inline-flex items-center gap-2 rounded-md border border-[#E6DFD3] bg-[#FFFFFF] px-3 py-1.5 text-xs text-[#6B6258] shadow-2xs dark:border-[#38312C] dark:bg-[#282320] dark:text-[#B5A89B] self-start md:self-auto">
-              <span className={`h-2 w-2 rounded-full ${
-                currentStep === 'prompt'
-                  ? 'bg-emerald-500'
-                  : currentStep === 'questions'
-                  ? 'bg-[#C15F3D] animate-pulse'
-                  : 'bg-[#8E8377]'
-              }`} />
-              <span className="font-medium text-[#2B2520] dark:text-[#EDE5DC]">
-                {currentStep === 'prompt'
-                  ? t.app.status.promptReady
-                  : currentStep === 'questions'
-                  ? t.app.status.clarification
-                  : t.app.status.ready}
-              </span>
-            </div>
-          </section>
-
+        {/* Main Workspace Layout */}
+        <main className="mx-auto w-full max-w-(--breakpoint-2xl) px-4 py-4 sm:px-8 flex-1 flex flex-col">
           {/* Error banner */}
           {error && (
-            <div className="mb-4 flex items-center gap-3 rounded-md border border-red-200 bg-red-50/80 p-3.5 text-xs text-red-900 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+            <div className="mb-4 flex items-center gap-3 rounded-md border border-red-200 bg-red-50/80 p-3 text-xs text-red-900 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
               <AlertCircle className="h-4 w-4 shrink-0" />
               <div className="flex-1">
                 <span className="font-semibold">{t.app.errorPrefix}: </span>
@@ -472,12 +461,12 @@ export default function Home() {
             </div>
           )}
 
-          {/* 2-Column Dashboard Grid with controlled width */}
+          {/* Studio Workspace: 2-Column Responsive Layout */}
           <div className="flex flex-col lg:flex-row gap-5 flex-1 items-start">
-            {/* Left Column: Domain, Pinned Attributes & Seed Input */}
-            <div className="w-full lg:w-[460px] lg:max-w-[500px] shrink-0 space-y-4 lg:sticky lg:top-18">
-              {/* Step 1: Domain Selection (Icons only with real tooltip) */}
-              <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-4 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
+            {/* Left Pane: Composer & Domain Controls (42% width) */}
+            <div className="w-full lg:w-[480px] lg:max-w-[500px] shrink-0 space-y-3.5 lg:sticky lg:top-16">
+              {/* Step 1: Pill Domain Selector */}
+              <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-3 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
                 <DomainSelector
                   domains={domains}
                   selectedDomainId={selectedDomainId}
@@ -490,7 +479,7 @@ export default function Home() {
                 />
               </section>
 
-              {/* Step 2: Pinned Domain Attributes (Aspect Ratio, Resolution, Motion, Camera, etc) */}
+              {/* Step 2: Pinned Domain Attributes (Aspect Ratio, Resolution, Motion, Camera) */}
               <PinnedAttributesSelector
                 domainId={selectedDomainId}
                 value={pinnedAttributes}
@@ -499,8 +488,8 @@ export default function Home() {
                 t={t}
               />
 
-              {/* Step 3: Seed Input & Media Attachments */}
-              <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-4 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
+              {/* Step 3: Integrated Seed Input & Dropzone */}
+              <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-3.5 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
                 <SeedInput
                   seed={seed}
                   onChangeSeed={setSeed}
@@ -517,23 +506,21 @@ export default function Home() {
               </section>
             </div>
 
-            {/* Right Column: Dynamic Interaction / Output */}
+            {/* Right Pane: Interactive Output Studio & Cheatsheet (58% width) */}
             <div className="flex-1 w-full min-w-0 flex flex-col min-h-[500px]">
+              {/* Initial State: Rich Domain Parameter Guide & 1-Click Starters */}
               {currentStep === 'input' && (
-                <div className="h-full min-h-[420px] flex flex-col items-center justify-center rounded-lg border border-dashed border-[#E6DFD3] bg-[#F5F0E6]/50 p-8 text-center dark:border-[#38312C] dark:bg-[#1F1A18]/50">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#C15F3D]/10 text-[#C15F3D] dark:bg-[#DA7756]/20 dark:text-[#DA7756] mb-3">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-[#2B2520] dark:text-[#EDE5DC]">
-                    {t.app.placeholderEmptyState.title}
-                  </h3>
-                  <p className="text-xs text-[#6B6258] dark:text-[#B5A89B] mt-1 max-w-sm">
-                    {t.app.placeholderEmptyState.desc}
-                  </p>
-                </div>
+                <section className="animate-in fade-in duration-200">
+                  <DomainCheatsheet
+                    domain={selectedDomainObj}
+                    onSelectExample={(example) => setSeed(example)}
+                    locale={locale}
+                    t={t}
+                  />
+                </section>
               )}
 
-              {/* Questionnaire Step */}
+              {/* Questions State: Interactive Questionnaire Form */}
               {currentStep === 'questions' && questions.length > 0 && (
                 <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-5 shadow-2xs dark:border-[#38312C] dark:bg-[#282320] animate-in fade-in duration-200">
                   <QuestionnaireForm
@@ -550,7 +537,7 @@ export default function Home() {
                 </section>
               )}
 
-              {/* Synthesized Prompt Step */}
+              {/* Prompt Ready State: Full Master Canvas */}
               {currentStep === 'prompt' && (
                 <section className="animate-in fade-in duration-200">
                   <PromptViewer

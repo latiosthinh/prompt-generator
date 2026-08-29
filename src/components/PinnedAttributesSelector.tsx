@@ -4,7 +4,7 @@ import React from 'react';
 import { getDomainPinnedAttributes, PinnedAttributeGroup } from '@/config/domains';
 import { PinnedAttributes } from '@/types/schemas';
 import { Translations } from '@/i18n';
-import { Pin } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 
 interface PinnedAttributesSelectorProps {
   domainId: string;
@@ -39,20 +39,29 @@ export function PinnedAttributesSelector({
     onChange(next);
   };
 
+  const activeCount = Object.keys(value).filter((k) => !!value[k as keyof PinnedAttributes]).length;
+
   return (
-    <div className="w-full space-y-2.5 rounded-md border border-[#E6DFD3] bg-[#FDFCF9] p-3 dark:border-[#38312C] dark:bg-[#1E1917]">
-      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#8E8377] dark:text-[#7E7368]">
-        <Pin className="h-3 w-3 text-[#C15F3D] dark:text-[#DA7756]" />
-        <span>{t.pinnedAttributes.title}</span>
+    <div className="space-y-2 rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-3 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#8E8377] dark:text-[#7E7368]">
+          <SlidersHorizontal className="h-3 w-3 text-[#C15F3D] dark:text-[#DA7756]" />
+          <span>{t.pinnedAttributes.title}</span>
+        </div>
+        {activeCount > 0 && (
+          <span className="rounded-full bg-[#C15F3D]/10 px-2 py-0.5 text-[10px] font-bold text-[#C15F3D] dark:bg-[#DA7756]/20 dark:text-[#DA7756]">
+            {activeCount} selected
+          </span>
+        )}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 pt-1">
         {groups.map((group) => {
           const currentValue = value[group.key as keyof PinnedAttributes];
 
           return (
-            <div key={group.key} className="flex flex-wrap items-center gap-1.5 text-xs">
-              <span className="min-w-[110px] text-[11px] font-medium text-[#6B6258] dark:text-[#B5A89B]">
+            <div key={group.key} className="flex flex-col sm:flex-row sm:items-center gap-1.5 text-xs">
+              <span className="min-w-[100px] shrink-0 text-[11px] font-medium text-[#6B6258] dark:text-[#B5A89B]">
                 {group.label}:
               </span>
               <div className="flex flex-wrap gap-1">
@@ -66,10 +75,10 @@ export function PinnedAttributesSelector({
                       disabled={disabled}
                       onClick={() => handleToggle(group.key as keyof PinnedAttributes, opt.value)}
                       aria-pressed={isSelected}
-                      className={`rounded-sm border px-2 py-0.5 text-[11px] font-medium transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
+                      className={`rounded px-2 py-0.5 text-[11px] font-medium transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
                         isSelected
-                          ? 'border-[#C15F3D] bg-[#C15F3D] text-white shadow-2xs dark:border-[#DA7756] dark:bg-[#DA7756]'
-                          : 'border-[#E6DFD3] bg-[#FFFFFF] text-[#6B6258] hover:border-[#C15F3D]/40 hover:bg-[#F9EFE9] dark:border-[#38312C] dark:bg-[#282320] dark:text-[#B5A89B] dark:hover:border-[#DA7756]/40 dark:hover:bg-[#33231D]'
+                          ? 'bg-[#C15F3D] text-white shadow-2xs dark:bg-[#DA7756]'
+                          : 'border border-[#E6DFD3] bg-[#F5F0E6]/50 text-[#6B6258] hover:border-[#C15F3D]/50 hover:bg-[#FDF6F0] dark:border-[#38312C] dark:bg-[#1E1917] dark:text-[#B5A89B] dark:hover:border-[#DA7756]/50 dark:hover:bg-[#33231D]'
                       }`}
                     >
                       {opt.label}

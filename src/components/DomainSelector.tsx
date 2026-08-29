@@ -31,44 +31,37 @@ export function DomainSelector({
 }: DomainSelectorProps) {
   return (
     <div className="w-full space-y-2">
-      <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8E8377] dark:text-[#7E7368]">
-        {t.domainSelector.label}
-      </label>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between">
+        <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8377] dark:text-[#7E7368]">
+          {t.domainSelector.label}
+        </label>
+      </div>
+
+      {/* Modern pill tabs with Icon + Short Name */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-1 rounded-lg border border-[#E6DFD3] bg-[#F5F0E6]/50 dark:border-[#38312C] dark:bg-[#1E1917]">
         {domains.map((domain) => {
           const Icon = ICON_MAP[domain.iconName];
           const isSelected = domain.id === selectedDomainId;
 
-          return (
-            <div key={domain.id} className="relative group/tooltip flex-1">
-              <button
-                type="button"
-                disabled={disabled}
-                onClick={() => onSelectDomain(domain.id)}
-                aria-label={domain.name}
-                className={`w-full flex items-center justify-center p-2.5 rounded-md border transition-all duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
-                  isSelected
-                    ? 'border-[#C15F3D] bg-[#C15F3D] text-white shadow-2xs dark:border-[#DA7756] dark:bg-[#DA7756] dark:text-white'
-                    : 'border-[#E6DFD3] bg-[#FFFFFF] hover:border-[#D5CCBE] hover:bg-[#F5F0E6] text-[#6B6258] dark:border-[#38312C] dark:bg-[#282320] dark:text-[#B5A89B] dark:hover:border-[#4A413B] dark:hover:bg-[#332A26]'
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-              </button>
+          // Short label formatting
+          const shortName = domain.name.split('(')[0].trim();
 
-              {/* Floating Vintage Tooltip */}
-              <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 opacity-0 group-hover/tooltip:opacity-100 transition-all duration-150 ease-out z-50 transform group-hover/tooltip:-translate-y-0.5">
-                <div className="rounded-md border border-[#E6DFD3] bg-[#2B2520] p-2 text-center shadow-lg dark:border-[#4A413B] dark:bg-[#191614]">
-                  <p className="text-xs font-semibold text-[#FBF9F5] leading-tight">
-                    {domain.name}
-                  </p>
-                  <p className="mt-1 text-[10px] text-[#B5A89B] leading-snug">
-                    {domain.description}
-                  </p>
-                  {/* Arrow */}
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-[#2B2520] dark:border-t-[#191614]" />
-                </div>
-              </div>
-            </div>
+          return (
+            <button
+              key={domain.id}
+              type="button"
+              disabled={disabled}
+              onClick={() => onSelectDomain(domain.id)}
+              aria-pressed={isSelected}
+              className={`flex items-center gap-2 rounded-md px-2.5 py-2 text-xs font-semibold transition-all duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 text-left ${
+                isSelected
+                  ? 'bg-[#C15F3D] text-white shadow-2xs dark:bg-[#DA7756] dark:text-white'
+                  : 'bg-transparent text-[#6B6258] hover:bg-[#FFFFFF] hover:text-[#2B2520] dark:text-[#B5A89B] dark:hover:bg-[#282320] dark:hover:text-white'
+              }`}
+            >
+              <Icon className={`h-4 w-4 shrink-0 ${isSelected ? 'text-white' : 'text-[#8E8377] dark:text-[#7E7368]'}`} />
+              <span className="truncate">{shortName}</span>
+            </button>
           );
         })}
       </div>

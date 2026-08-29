@@ -96,6 +96,23 @@ function initMemory() {
   }
 }
 
+function sanitizeSessionForStorage(session: Session): Session {
+  return {
+    ...session,
+    rounds: session.rounds.map((r) => ({
+      ...r,
+      attachments: r.attachments?.map((a) => ({
+        id: a.id,
+        name: a.name,
+        type: a.type,
+        size: a.size,
+        textContent: a.textContent,
+        // Strip dataUrl to avoid LocalStorage quota exhaustion
+      })),
+    })),
+  };
+}
+
 export const sessionStore = {
   getSessions(): Session[] {
     initMemory();
@@ -109,9 +126,10 @@ export const sessionStore = {
 
   saveSession(session: Session): void {
     initMemory();
-    const existingIndex = memorySessions.findIndex((s) => s.id === session.id);
+    const sanitized = sanitizeSessionForStorage(session);
+    const existingIndex = memorySessions.findIndex((s) => s.id === sanitized.id);
     const updated: Session = {
-      ...session,
+      ...sanitized,
       updatedAt: Date.now(),
     };
 

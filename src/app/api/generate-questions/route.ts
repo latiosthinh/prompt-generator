@@ -15,7 +15,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { seed, domain, previousPrompt, previousAnswers, previousQuestions, locale = 'vi' } = parseResult.data;
+    const {
+      seed,
+      domain,
+      previousPrompt,
+      previousAnswers,
+      previousQuestions,
+      pinnedAttributes,
+      attachments,
+      locale = 'vi',
+    } = parseResult.data;
 
     const isVi = locale === 'vi';
     const langInstruction = isVi
@@ -23,6 +32,20 @@ export async function POST(req: NextRequest) {
       : 'The questions, analysis, and options MUST be written in English.';
 
     const domainContext = domain ? `Domain context: "${domain}".` : 'Domain: General / Multi-purpose.';
+
+    let pinnedAttrContext = '';
+    if (pinnedAttributes && Object.keys(pinnedAttributes).length > 0) {
+      pinnedAttrContext = `\nAlready pinned parameters by user (DO NOT ask redundant questions about these): ${JSON.stringify(
+        pinnedAttributes
+      )}`;
+    }
+
+    let attachmentContext = '';
+    if (attachments && attachments.length > 0) {
+      attachmentContext = `\nUser has attached ${attachments.length} reference file(s): ${attachments
+        .map((a) => a.name)
+        .join(', ')}`;
+    }
 
     let refinementPrompt = '';
     if (previousPrompt && previousPrompt.trim()) {
@@ -60,7 +83,7 @@ For each question:
 - Provide 3 to 5 distinct, high-quality, practical options with ID and label in ${isVi ? 'Vietnamese' : 'English'}
 - Always ensure allowOther is true
 
-${domainContext}
+${domainContext}${pinnedAttrContext}${attachmentContext}
 ${refinementPrompt}
 
 You MUST return ONLY a valid JSON object matching this schema:

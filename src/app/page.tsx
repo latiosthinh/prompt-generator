@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { DomainSelector } from '@/components/DomainSelector';
 import { SeedInput } from '@/components/SeedInput';
+import { PinnedAttributesSelector } from '@/components/PinnedAttributesSelector';
 import { QuestionnaireForm } from '@/components/QuestionnaireForm';
 import { PromptViewer } from '@/components/PromptViewer';
 import { Sidebar } from '@/components/Sidebar';
@@ -13,6 +14,9 @@ import {
   GenerateQuestionsResponse,
   Session,
   SessionRound,
+  Attachment,
+  PinnedAttributes,
+  DeconstructMediaResponse,
 } from '@/types/schemas';
 import { sessionStore, useSessions } from '@/lib/storage';
 import { Sparkles, AlertCircle, PanelLeftClose, PanelLeftOpen, Globe, CheckCircle2, HelpCircle } from 'lucide-react';
@@ -30,6 +34,9 @@ export default function Home() {
 
   const [selectedDomainId, setSelectedDomainId] = useState<string>(domains[0].id);
   const [seed, setSeed] = useState<string>('');
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [pinnedAttributes, setPinnedAttributes] = useState<PinnedAttributes>({});
+  const [isDeconstructing, setIsDeconstructing] = useState<boolean>(false);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState<boolean>(false);
   const [isRefiningQuestions, setIsRefiningQuestions] = useState<boolean>(false);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -51,8 +58,58 @@ export default function Home() {
     setLocale((prev) => (prev === 'vi' ? 'en' : 'vi'));
   };
 
+  const handleDeconstruct = async () => {
+    if (attachments.length === 0) return;
+
+    setError(null);
+    setIsDeconstructing(true);
+
+    try {
+      const res = await fetch('/api/deconstruct-media', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          attachments,
+          seed: seed.trim() || undefined,
+          domain: selectedDomainObj.name,
+          locale,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server responded with status ${res.status}`);
+      }
+
+      const data: DeconstructMediaResponse = await res.json();
+      if (data.seed) {
+        setSeed(data.seed);
+      }
+      if (data.detectedAttributes) {
+        setPinnedAttributes((prev) => ({
+          ...prev,
+          ...data.detectedAttributes,
+        }));
+      }
+      if (data.suggestedDomain) {
+        const matchingDomain = domains.find(
+          (d) => d.id === data.suggestedDomain || d.name.toLowerCase().includes(data.suggestedDomain!.toLowerCase())
+        );
+        if (matchingDomain) {
+          setSelectedDomainId(matchingDomain.id);
+        }
+      }
+    } catch (err: unknown) {
+      console.error('Failed to deconstruct media attachments:', err);
+      const msg = err instanceof Error ? err.message : t.app.fallbackError;
+      setError(msg);
+    } finally {
+      setIsDeconstructing(false);
+    }
+  };
+
   const handleGenerateQuestions = async () => {
-    if (!seed.trim()) return;
+    if (!seed.trim() && attachments.length === 0) return;
 
     setError(null);
     setIsLoadingQuestions(true);
@@ -62,8 +119,16 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          seed: seed.trim(),
+          seed: seed.trim() || (locale === 'vi' ? 'Ý tưởng từ tệp đính kèm' : 'Idea from attachments'),
           domain: selectedDomainObj.name,
+          pinnedAttributes: Object.keys(pinnedAttributes).length > 0 ? pinnedAttributes : undefined,
+          attachments: attachments.map((a) => ({
+            id: a.id,
+            name: a.name,
+            type: a.type,
+            size: a.size,
+            textContent: a.textContent,
+          })),
           locale,
         }),
       });
@@ -103,6 +168,14 @@ export default function Home() {
           previousPrompt: generatedPrompt,
           previousQuestions: questions,
           previousAnswers: answers,
+          pinnedAttributes: Object.keys(pinnedAttributes).length > 0 ? pinnedAttributes : undefined,
+          attachments: attachments.map((a) => ({
+            id: a.id,
+            name: a.name,
+            type: a.type,
+            size: a.size,
+            textContent: a.textContent,
+          })),
           locale,
         }),
       });
@@ -151,6 +224,8 @@ export default function Home() {
     setError(null);
     setGeneratedPrompt('');
     setSeed('');
+    setAttachments([]);
+    setPinnedAttributes({});
     setCurrentRounds([]);
     setCurrentStep('input');
   };
@@ -172,9 +247,13 @@ export default function Home() {
     if (lastRound) {
       setQuestions(lastRound.questions || []);
       setAnswers(lastRound.answers || []);
+      setAttachments(lastRound.attachments || []);
+      setPinnedAttributes(lastRound.pinnedAttributes || {});
       setGeneratedPrompt(lastRound.prompt || '');
       setCurrentStep('prompt');
     } else {
+      setAttachments([]);
+      setPinnedAttributes({});
       setCurrentStep('input');
     }
     setError(null);
@@ -207,6 +286,14 @@ export default function Home() {
           domain: selectedDomainObj.name,
           questions,
           answers,
+          pinnedAttributes: Object.keys(pinnedAttributes).length > 0 ? pinnedAttributes : undefined,
+          attachments: attachments.map((a) => ({
+            id: a.id,
+            name: a.name,
+            type: a.type,
+            size: a.size,
+            textContent: a.textContent,
+          })),
           locale,
         }),
       });
@@ -237,6 +324,14 @@ export default function Home() {
         id: `r_${Date.now()}`,
         questions: [...questions],
         answers: [...answers],
+        pinnedAttributes: Object.keys(pinnedAttributes).length > 0 ? pinnedAttributes : undefined,
+        attachments: attachments.map((a) => ({
+          id: a.id,
+          name: a.name,
+          type: a.type,
+          size: a.size,
+          textContent: a.textContent,
+        })),
         prompt: accumulated,
         createdAt: Date.now(),
       };
@@ -379,20 +474,32 @@ export default function Home() {
 
           {/* 2-Column Dashboard Grid with controlled width */}
           <div className="flex flex-col lg:flex-row gap-5 flex-1 items-start">
-            {/* Left Column: Domain & Seed Input (capped at max 500px) */}
+            {/* Left Column: Domain, Pinned Attributes & Seed Input */}
             <div className="w-full lg:w-[460px] lg:max-w-[500px] shrink-0 space-y-4 lg:sticky lg:top-18">
               {/* Step 1: Domain Selection (Icons only with real tooltip) */}
               <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-4 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
                 <DomainSelector
                   domains={domains}
                   selectedDomainId={selectedDomainId}
-                  onSelectDomain={(domainId) => setSelectedDomainId(domainId)}
-                  disabled={isLoadingQuestions || isGeneratingPrompt || isRefiningQuestions}
+                  onSelectDomain={(domainId) => {
+                    setSelectedDomainId(domainId);
+                    setPinnedAttributes({});
+                  }}
+                  disabled={isLoadingQuestions || isGeneratingPrompt || isRefiningQuestions || isDeconstructing}
                   t={t}
                 />
               </section>
 
-              {/* Step 2: Seed Input */}
+              {/* Step 2: Pinned Domain Attributes (Aspect Ratio, Resolution, Motion, Camera, etc) */}
+              <PinnedAttributesSelector
+                domainId={selectedDomainId}
+                value={pinnedAttributes}
+                onChange={setPinnedAttributes}
+                disabled={isLoadingQuestions || isGeneratingPrompt || isRefiningQuestions || isDeconstructing}
+                t={t}
+              />
+
+              {/* Step 3: Seed Input & Media Attachments */}
               <section className="rounded-lg border border-[#E6DFD3] bg-[#FFFFFF] p-4 shadow-2xs dark:border-[#38312C] dark:bg-[#282320]">
                 <SeedInput
                   seed={seed}
@@ -401,6 +508,10 @@ export default function Home() {
                   onGenerateQuestions={handleGenerateQuestions}
                   isLoading={isLoadingQuestions}
                   disabled={isGeneratingPrompt || isRefiningQuestions}
+                  attachments={attachments}
+                  onChangeAttachments={setAttachments}
+                  onDeconstruct={handleDeconstruct}
+                  isDeconstructing={isDeconstructing}
                   t={t}
                 />
               </section>

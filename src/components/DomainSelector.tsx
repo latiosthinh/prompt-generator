@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Image, Code, PenTool, Bot, Sparkles, LucideIcon } from 'lucide-react';
+import { Image, Video, Code, PenTool, Bot, Sparkles, LucideIcon } from 'lucide-react';
 import { DomainConfig } from '@/config/domains';
 import { Translations } from '@/i18n';
 
 const ICON_MAP: Record<DomainConfig['iconName'], LucideIcon> = {
   Image,
+  Video,
   Code,
   PenTool,
   Bot,
